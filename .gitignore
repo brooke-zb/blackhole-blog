@@ -1,0 +1,23 @@
+HELP.md
+build/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
+
+### Nodejs ###
+/**/node_modules/
+.DS_Store
+/**/dist
+/**/dist-ssr
+*.local
+pnpm-lock.yaml
+
+### Project Configuration ###
+config-*.toml
+!config-example.toml
