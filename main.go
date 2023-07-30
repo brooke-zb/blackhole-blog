@@ -1,6 +1,7 @@
 package main
 
 import (
+	"blackhole-blog/pkg/dao"
 	"blackhole-blog/pkg/setting"
 	"blackhole-blog/routes"
 	"fmt"
@@ -8,6 +9,7 @@ import (
 
 func init() {
 	setting.Setup()
+	dao.Setup()
 }
 
 func main() {
