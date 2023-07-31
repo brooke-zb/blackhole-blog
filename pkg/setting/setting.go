@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-type logConfig struct {
+type LogConfig struct {
 	Writer  string  `mapstructure:"writer"`
 	Encoder string  `mapstructure:"encoder"`
 	File    *string `mapstructure:"file"`
@@ -29,9 +29,9 @@ type config struct {
 		LogMode  string `mapstructure:"log_mode"`
 	} `mapstructure:"database"`
 	Log struct {
-		Default logConfig `mapstructure:"default"`
-		Api     logConfig `mapstructure:"api"`
-		Error   logConfig `mapstructure:"error"`
+		Default LogConfig `mapstructure:"default"`
+		Api     LogConfig `mapstructure:"api"`
+		Error   LogConfig `mapstructure:"error"`
 	} `mapstructure:"log"`
 	Task struct {
 		Cron struct {
@@ -64,10 +64,10 @@ func Setup() {
 	v := viper.New()
 	v.SetConfigFile(readConfigPath())
 	if err := v.ReadInConfig(); err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 
 	if err := v.Unmarshal(&Config); err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 }
