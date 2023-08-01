@@ -1,9 +1,12 @@
 package cache
 
 import (
+	"blackhole-blog/models/dto"
 	"github.com/karlseguin/ccache/v3"
 	"time"
 )
+
+var User = ccache.New(ccache.Configure[dto.UserDto]())
 
 // DeferredSetCache is a helper function to set cache after function return
 func DeferredSetCache[T any](cache *ccache.Cache[T], key string, item *T, err *error) func() {
