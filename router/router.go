@@ -1,7 +1,9 @@
 package router
 
 import (
-	"blackhole-blog/middleware"
+	"blackhole-blog/middleware/auth"
+	"blackhole-blog/middleware/no_route"
+	"blackhole-blog/middleware/recovery"
 	"blackhole-blog/router/api/v2"
 	"github.com/gin-gonic/gin"
 )
@@ -9,9 +11,9 @@ import (
 func InitRouter() *gin.Engine {
 	r := gin.New()
 
-	r.NoRoute(middleware.NoRoute())
-	r.Use(middleware.Recovery())
-	r.Use(middleware.Authorization())
+	r.NoRoute(no_route.NoRoute())
+	r.Use(recovery.Recovery())
+	r.Use(auth.Authorization())
 
 	account := r.Group("/account")
 	{

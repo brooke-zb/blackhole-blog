@@ -1,6 +1,7 @@
-package middleware
+package auth
 
 import (
+	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
@@ -9,8 +10,8 @@ import (
 )
 
 const (
-	AuthUserKey  = "bhblog.user"
-	AuthTokenKey = "Authorization"
+	UserKey  = "bhblog.user"
+	TokenKey = "Authorization"
 )
 
 func Authorization() gin.HandlerFunc {
@@ -22,15 +23,15 @@ func Authorization() gin.HandlerFunc {
 				if ok {
 					log.Err.Error(err.Error())
 				}
-				util.SetCookie(c, AuthTokenKey, "", -1, true)
+				util.SetCookie(c, TokenKey, "", -1, true)
 			}
 		}()
 		// get token from cookie
-		token, err := c.Cookie(AuthTokenKey)
+		token, err := c.Cookie(TokenKey)
 
 		// if not exist then get token from header
 		if err != nil {
-			token = c.GetHeader(AuthTokenKey)
+			token = c.GetHeader(TokenKey)
 			if token == "" {
 				return
 			}
@@ -47,7 +48,7 @@ func Authorization() gin.HandlerFunc {
 		user := service.User.FindById(claims.Uid)
 
 		// set user to context
-		c.Set(AuthUserKey, user)
+		c.Set(UserKey, user)
 
 		// refresh token if about to expire
 		if claims.ExpiresAt.Time.Sub(claims.IssuedAt.Time) < setting.Config.Server.Jwt.RefreshBeforeExp && c.Request.URL.Path != "/account/token" {
@@ -56,7 +57,23 @@ func Authorization() gin.HandlerFunc {
 				log.Err.Error(err.Error())
 				return
 			}
-			util.SetCookie(c, AuthTokenKey, newToken, int(setting.Config.Server.Jwt.Expire.Seconds()), true)
+			util.SetCookie(c, TokenKey, newToken, int(setting.Config.Server.Jwt.Expire.Seconds()), true)
 		}
 	}
+}
+
+func ShouldGetUser(c *gin.Context) (user dto.UserDto, exists bool) {
+	userObj, exists := c.Get(UserKey)
+	if !exists {
+		return user, false
+	}
+	return userObj.(dto.UserDto), true
+}
+
+func MustGetUser(c *gin.Context) dto.UserDto {
+	user, exists := ShouldGetUser(c)
+	if !exists {
+		panic(service.NewError(service.Unauthorized, service.UnauthorizedMessage))
+	}
+	return user
 }

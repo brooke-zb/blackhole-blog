@@ -1,4 +1,4 @@
-package middleware
+package recovery
 
 import (
 	"blackhole-blog/pkg/log"

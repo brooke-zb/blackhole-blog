@@ -1,4 +1,4 @@
-package middleware
+package no_route
 
 import (
 	"blackhole-blog/pkg/log"
