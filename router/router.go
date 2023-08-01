@@ -9,6 +9,8 @@ import (
 func InitRouter() *gin.Engine {
 	r := gin.New()
 
+	r.NoRoute(middleware.NoRoute())
+	r.Use(middleware.Recovery())
 	r.Use(middleware.Authorization())
 
 	account := r.Group("/account")

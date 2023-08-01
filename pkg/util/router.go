@@ -5,12 +5,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const BindErrorMsg = "请求参数错误"
+
 // BindJSON is a wrapper of gin.Context.ShouldBindJSON.
 // It will panic if any error occurs
 func BindJSON(c *gin.Context, obj any) {
 	err := c.ShouldBindJSON(obj)
 	if err != nil {
-		panic(service.NewError(422, err.Error()))
+		panic(service.NewError(422, BindErrorMsg))
 	}
 }
 
@@ -19,7 +21,7 @@ func BindJSON(c *gin.Context, obj any) {
 func BindQuery(c *gin.Context, obj any) {
 	err := c.ShouldBindQuery(obj)
 	if err != nil {
-		panic(service.NewError(422, err.Error()))
+		panic(service.NewError(422, BindErrorMsg))
 	}
 }
 
@@ -28,7 +30,7 @@ func BindQuery(c *gin.Context, obj any) {
 func BindUri(c *gin.Context, obj any) {
 	err := c.ShouldBindUri(obj)
 	if err != nil {
-		panic(service.NewError(422, err.Error()))
+		panic(service.NewError(422, BindErrorMsg))
 	}
 }
 
@@ -37,6 +39,6 @@ func BindUri(c *gin.Context, obj any) {
 func BindHeader(c *gin.Context, obj any) {
 	err := c.ShouldBindHeader(obj)
 	if err != nil {
-		panic(service.NewError(422, err.Error()))
+		panic(service.NewError(422, BindErrorMsg))
 	}
 }
