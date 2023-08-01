@@ -1,7 +1,7 @@
 package v2
 
 import (
-	"blackhole-blog/middleware/auth"
+	"blackhole-blog/middleware"
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/setting"
@@ -33,14 +33,14 @@ func AccountLogin(c *gin.Context) {
 		panic(service.NewError(service.InternalError, service.InternalErrorMessage))
 	}
 
-	util.SetCookie(c, auth.TokenKey, token, int(expire.Seconds()), true)
+	util.SetCookie(c, middleware.AuthTokenKey, token, int(expire.Seconds()), true)
 	c.JSON(http.StatusOK, util.RespOK(token))
 }
 
 func AccountLogout(c *gin.Context) {
-	auth.MustGetUser(c)
+	util.MustGetUser(c)
 
 	// remove cookie
-	util.SetCookie(c, auth.TokenKey, "", -1, true)
+	util.SetCookie(c, middleware.AuthTokenKey, "", -1, true)
 	c.JSON(http.StatusOK, util.RespMsg("退出登录成功"))
 }

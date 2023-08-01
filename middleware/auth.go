@@ -1,7 +1,6 @@
-package auth
+package middleware
 
 import (
-	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
@@ -10,11 +9,11 @@ import (
 )
 
 const (
-	UserKey  = "bhblog.user"
-	TokenKey = "Authorization"
+	AuthUserKey  = "bhblog.user"
+	AuthTokenKey = "Authorization"
 )
 
-func Middleware() gin.HandlerFunc {
+func Authorization() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			r := recover()
@@ -23,15 +22,15 @@ func Middleware() gin.HandlerFunc {
 				if ok {
 					log.Err.Error(err.Error())
 				}
-				util.SetCookie(c, TokenKey, "", -1, true)
+				util.SetCookie(c, AuthTokenKey, "", -1, true)
 			}
 		}()
 		// get token from cookie
-		token, err := c.Cookie(TokenKey)
+		token, err := c.Cookie(AuthTokenKey)
 
 		// if not exist then get token from header
 		if err != nil {
-			token = c.GetHeader(TokenKey)
+			token = c.GetHeader(AuthTokenKey)
 			if token == "" {
 				return
 			}
@@ -48,7 +47,7 @@ func Middleware() gin.HandlerFunc {
 		user := service.User.FindById(claims.Uid)
 
 		// set user to context
-		c.Set(UserKey, user)
+		c.Set(AuthUserKey, user)
 
 		// refresh token if about to expire
 		if claims.ExpiresAt.Time.Sub(claims.IssuedAt.Time) < setting.Config.Server.Jwt.RefreshBeforeExp && c.Request.URL.Path != "/account/token" {
@@ -57,23 +56,7 @@ func Middleware() gin.HandlerFunc {
 				log.Err.Error(err.Error())
 				return
 			}
-			util.SetCookie(c, TokenKey, newToken, int(setting.Config.Server.Jwt.Expire.Seconds()), true)
+			util.SetCookie(c, AuthTokenKey, newToken, int(setting.Config.Server.Jwt.Expire.Seconds()), true)
 		}
 	}
-}
-
-func ShouldGetUser(c *gin.Context) (user dto.UserDto, exists bool) {
-	userObj, exists := c.Get(UserKey)
-	if !exists {
-		return user, false
-	}
-	return userObj.(dto.UserDto), true
-}
-
-func MustGetUser(c *gin.Context) dto.UserDto {
-	user, exists := ShouldGetUser(c)
-	if !exists {
-		panic(service.NewError(service.Unauthorized, service.UnauthorizedMessage))
-	}
-	return user
 }
