@@ -9,6 +9,12 @@ proxy-headers = [
     'X-Real-IP'
 ]
 
+[server.jwt]
+secret = 'TheJwtSecretShouldBe32Characters'
+expire = '2h'
+remember-me-expire = '168h' # 7 days
+refresh-before-expire = '30m'
+
 [database]
 host = '127.0.0.1'
 port = 3306

@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/spf13/viper"
 	"os"
+	"time"
 )
 
 type LogConfig struct {
@@ -19,6 +20,12 @@ type config struct {
 		Port         int      `mapstructure:"port"`
 		Proxy        []string `mapstructure:"proxy"`
 		ProxyHeaders []string `mapstructure:"proxy-headers"`
+		Jwt          struct {
+			Secret           string        `mapstructure:"secret"`
+			Expire           time.Duration `mapstructure:"expire"`
+			RememberMeExp    time.Duration `mapstructure:"remember-me-expire"`
+			RefreshBeforeExp time.Duration `mapstructure:"refresh-before-expire"`
+		} `mapstructure:"jwt"`
 	} `mapstructure:"server"`
 	Database struct {
 		Host     string `mapstructure:"host"`
