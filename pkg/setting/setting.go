@@ -26,6 +26,11 @@ type config struct {
 			RememberMeExp    time.Duration `mapstructure:"remember-me-expire"`
 			RefreshBeforeExp time.Duration `mapstructure:"refresh-before-expire"`
 		} `mapstructure:"jwt"`
+		Cookie struct {
+			Path   string `mapstructure:"path"`
+			Domain string `mapstructure:"domain"`
+			Secure bool   `mapstructure:"secure"`
+		}
 	} `mapstructure:"server"`
 	Database struct {
 		Host     string `mapstructure:"host"`
