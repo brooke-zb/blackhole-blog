@@ -17,3 +17,9 @@ A simple, security blog system based on [Gin](https://github.com/gin-gonic/gin)
 - [ ] sensitive words filter base on [go-wordsfilter](https://github.com/syyongx/go-wordsfilter)
 - [ ] mail notification base on [go-mail](https://github.com/wneessen/go-mail)
 - [ ] cron task base on [gocron](https://github.com/go-co-op/gocron)
+
+## Development Convention
+
+- DAO return result and error
+- Service return result, and panic service.Error while error occurred
+- Router should not handle error, handle it in recovery middleware
