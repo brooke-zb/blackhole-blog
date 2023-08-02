@@ -1,6 +1,9 @@
 package dao
 
-import "blackhole-blog/models"
+import (
+	"blackhole-blog/models"
+	"blackhole-blog/models/dto"
+)
 
 type userDao struct{}
 
@@ -22,4 +25,12 @@ func (userDao) FindList(page int, pageSize int) (users models.Page[models.User],
 		Limit(pageSize).Offset((page - 1) * pageSize).
 		Find(&users.Data).Error
 	return
+}
+
+func (userDao) UpdateInfo(uid uint64, updateInfoBody dto.UserUpdateInfoDto) error {
+	return db.Model(&models.User{}).Where("uid = ?", uid).Updates(updateInfoBody).Error
+}
+
+func (userDao) UpdatePassword(uid uint64, hashedPassword string) error {
+	return db.Model(&models.User{}).Where("uid = ?", uid).Update("password", hashedPassword).Error
 }

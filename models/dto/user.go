@@ -11,6 +11,23 @@ type UserDto struct {
 	Enabled bool    `json:"enabled"`
 }
 
+type LoginDto struct {
+	Username   string `json:"username" binding:"required"`
+	Password   string `json:"password" binding:"required"`
+	RememberMe bool   `json:"rememberMe"`
+}
+
+type UserUpdateInfoDto struct {
+	Name *string `json:"name" binding:"omitempty,min=2,max=32"`
+	Mail *string `json:"mail" binding:"omitempty,email"`
+	Link *string `json:"link" binding:"omitempty,url"`
+}
+
+type UserUpdatePasswordDto struct {
+	OldPassword string `json:"oldPassword" binding:"required,min=6,max=32"`
+	NewPassword string `json:"newPassword" binding:"required,min=6,max=32"`
+}
+
 func ToUserDto(user models.User) UserDto {
 	userDto := UserDto{
 		Uid: user.Uid,

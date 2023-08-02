@@ -44,3 +44,34 @@ func AccountLogout(c *gin.Context) {
 	util.SetCookie(c, auth.TokenKey, "", -1, true)
 	c.JSON(http.StatusOK, util.RespMsg("退出登录成功"))
 }
+
+func AccountInfo(c *gin.Context) {
+	user := auth.MustGetUser(c)
+	c.JSON(http.StatusOK, util.RespOK(user))
+}
+
+func AccountUpdateInfo(c *gin.Context) {
+	user := auth.MustGetUser(c)
+
+	// bindings
+	updateInfoBody := dto.UserUpdateInfoDto{}
+	util.BindJSON(c, &updateInfoBody)
+
+	// update user info
+	service.User.UpdateInfo(user.Uid, updateInfoBody)
+
+	c.JSON(http.StatusOK, util.RespMsg("更新用户信息成功"))
+}
+
+func AccountUpdatePassword(c *gin.Context) {
+	user := auth.MustGetUser(c)
+
+	// bindings
+	updatePasswordBody := dto.UserUpdatePasswordDto{}
+	util.BindJSON(c, &updatePasswordBody)
+
+	// update password
+	service.User.UpdatePassword(user.Uid, updatePasswordBody)
+
+	c.JSON(http.StatusOK, util.RespMsg("更新密码成功"))
+}

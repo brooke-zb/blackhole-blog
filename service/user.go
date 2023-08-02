@@ -26,7 +26,7 @@ func (userService) FindById(id uint64) (res dto.UserDto) {
 		if errors.Is(daoErr, gorm.ErrRecordNotFound) {
 			panic(NewError(NotFound, "未找到该用户"))
 		} else {
-			panic(NewError(InternalError, InternalErrorMessage))
+			panic(NewInternalError(daoErr))
 		}
 	}
 	return dto.ToUserDto(user)
@@ -38,7 +38,7 @@ func (userService) CheckUser(username string, password string) uint64 {
 		if errors.Is(daoErr, gorm.ErrRecordNotFound) {
 			panic(NewError(NotFound, "未找到该用户"))
 		} else {
-			panic(NewError(InternalError, InternalErrorMessage))
+			panic(NewInternalError(daoErr))
 		}
 	}
 
@@ -54,4 +54,45 @@ func (userService) CheckUser(username string, password string) uint64 {
 	}
 
 	return user.Uid
+}
+
+func (userService) UpdateInfo(id uint64, updateInfoBody dto.UserUpdateInfoDto) {
+	// cache
+	cacheKey := fmt.Sprintf("user:%d", id)
+	cache.User.Delete(cacheKey)
+
+	// update user info
+	daoErr := dao.User.UpdateInfo(id, updateInfoBody)
+	if daoErr != nil {
+		panic(NewInternalError(daoErr))
+	}
+}
+
+func (userService) UpdatePassword(id uint64, updatePasswordBody dto.UserUpdatePasswordDto) {
+	// cache
+	cacheKey := fmt.Sprintf("user:%d", id)
+	cache.User.Delete(cacheKey)
+
+	// check password
+	user, daoErr := dao.User.FindById(id)
+	if daoErr != nil {
+		if errors.Is(daoErr, gorm.ErrRecordNotFound) {
+			panic(NewError(NotFound, "未找到该用户"))
+		} else {
+			panic(NewInternalError(daoErr))
+		}
+	}
+	hashErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(updatePasswordBody.OldPassword))
+	if hashErr != nil {
+		panic(NewError(Unauthorized, "密码错误"))
+	}
+
+	// hash password
+	hashedPassword, hashErr := bcrypt.GenerateFromPassword([]byte(updatePasswordBody.NewPassword), bcrypt.DefaultCost)
+
+	// update password
+	daoErr = dao.User.UpdatePassword(id, string(hashedPassword))
+	if daoErr != nil {
+		panic(NewInternalError(daoErr))
+	}
 }

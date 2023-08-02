@@ -19,6 +19,9 @@ func InitRouter() *gin.Engine {
 	{
 		account.POST("/token", v2.AccountLogin)
 		account.DELETE("/token", v2.AccountLogout)
+		account.GET("", v2.AccountInfo)
+		account.PUT("", v2.AccountUpdateInfo)
+		account.PATCH("/password", v2.AccountUpdatePassword)
 	}
 
 	return r
