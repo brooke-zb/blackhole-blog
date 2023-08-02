@@ -17,11 +17,13 @@ const (
 type Error interface {
 	error
 	Code() int
+	E() error
 }
 
 type errorImpl struct {
 	code    int
 	message string
+	err     error
 }
 
 func (e *errorImpl) Error() string {
@@ -32,6 +34,18 @@ func (e *errorImpl) Code() int {
 	return e.code
 }
 
+func (e *errorImpl) E() error {
+	return e.err
+}
+
 func NewError(code int, message string) Error {
 	return &errorImpl{code: code, message: message}
+}
+
+func NewInternalError(err error) Error {
+	return &errorImpl{
+		code:    InternalError,
+		message: InternalErrorMessage,
+		err:     err,
+	}
 }

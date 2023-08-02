@@ -38,7 +38,11 @@ func Recovery() gin.HandlerFunc {
 				} else if serviceErr, ok := err.(service.Error); ok {
 					// service error
 					c.AbortWithStatusJSON(serviceErr.Code(), util.RespFail(serviceErr.Error()))
-					log.Err.Errorf("%s %s : %s", c.Request.Method, c.Request.URL.Path, serviceErr.Error())
+					if serviceErr.E() != nil {
+						log.Err.Errorf("%s %s : %s %s", c.Request.Method, c.Request.URL.Path, serviceErr.Error(), serviceErr.E())
+					} else {
+						log.Err.Errorf("%s %s : %s", c.Request.Method, c.Request.URL.Path, serviceErr.Error())
+					}
 				} else {
 					// unknown error
 					c.AbortWithStatusJSON(http.StatusInternalServerError, util.RespFail("发生了未知错误"))
