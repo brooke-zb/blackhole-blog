@@ -75,7 +75,7 @@ type User struct {
 	Name     string
 	Password string
 	Mail     string
-	Link     string
+	Link     *string
 	Enabled  bool
 }
 
@@ -84,5 +84,5 @@ type FriendlyLink struct {
 	Name        string
 	Link        string
 	Avatar      string
-	Description string
+	Description *string
 }
