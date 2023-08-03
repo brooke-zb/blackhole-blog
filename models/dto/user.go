@@ -7,7 +7,7 @@ type UserDto struct {
 	Role    RoleDto `json:"role"`
 	Name    string  `json:"name"`
 	Mail    string  `json:"mail"`
-	Link    string  `json:"link"`
+	Link    *string `json:"link"`
 	Enabled bool    `json:"enabled"`
 }
 
