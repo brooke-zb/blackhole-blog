@@ -23,3 +23,5 @@ A simple, security blog system based on [Gin](https://github.com/gin-gonic/gin)
 - DAO return result and error
 - Service return result, and panic service.Error while error occurred
 - Router should not handle error, handle it in recovery middleware
+- JSON field name should be camel case
+- struct field name should be upper camel case
