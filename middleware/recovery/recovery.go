@@ -46,7 +46,7 @@ func Recovery() gin.HandlerFunc {
 				} else {
 					// unknown error
 					c.AbortWithStatusJSON(http.StatusInternalServerError, util.RespFail("发生了未知错误"))
-					log.Err.Errorf("%s %s : 发生了未知错误\n%s", c.Request.Method, c.Request.URL.Path, string(debug.Stack()))
+					log.Err.Errorf("%s %s : 发生了未知错误: %v\n%s", c.Request.Method, c.Request.URL.Path, err, string(debug.Stack()))
 				}
 			}
 		}()
