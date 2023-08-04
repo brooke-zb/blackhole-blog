@@ -6,7 +6,10 @@ import (
 	"time"
 )
 
-var User = ccache.New(ccache.Configure[dto.UserDto]())
+var (
+	User    = ccache.New(ccache.Configure[dto.UserDto]())
+	Article = ccache.New(ccache.Configure[dto.ArticleDto]())
+)
 
 // DeferredSetCache is a helper function to set cache after function return
 func DeferredSetCache[T any](cache *ccache.Cache[T], key string, item *T, err *error) func() {

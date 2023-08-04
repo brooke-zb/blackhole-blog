@@ -24,5 +24,13 @@ func InitRouter() *gin.Engine {
 		account.PATCH("/password", v2.AccountUpdatePassword)
 	}
 
+	article := r.Group("/article")
+	{
+		article.GET("/:id", v2.ArticleFindById)
+		article.GET("", v2.ArticleFindList)
+		article.GET("/category/:name", v2.ArticleFindListByCategory)
+		article.GET("/tag/:name", v2.ArticleFindListByTag)
+	}
+
 	return r
 }

@@ -2,7 +2,15 @@
 // when error occurs, it will panic an Error, and should be handled in middleware.
 package service
 
-var User = userService{}
+import (
+	"errors"
+	"gorm.io/gorm"
+)
+
+var (
+	User    = userService{}
+	Article = articleService{}
+)
 
 const (
 	Unauthorized  = 401
