@@ -5,6 +5,7 @@ import (
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/cache"
 	"blackhole-blog/pkg/dao"
+	"blackhole-blog/pkg/util"
 	"fmt"
 )
 
@@ -51,4 +52,17 @@ func (articleService) FindListByCategory(category string, page int, size int) (r
 	})
 	panicErrIfNotNil(daoErr)
 	return dto.ToArticlePreviewDtoList(articles)
+}
+
+// IncrAndGetReadCount increase and get article read count increment.
+func (articleService) IncrAndGetReadCount(id uint64, ip string) int {
+	err := util.Redis.PFAdd(getArticleReadCountKey(id), ip)
+	panicErrIfNotNil(err)
+	count, err := util.Redis.PFCount(getArticleReadCountKey(id))
+	panicErrIfNotNil(err)
+	return int(count)
+}
+
+func getArticleReadCountKey(id uint64) string {
+	return fmt.Sprintf("bhs:article:%d:read_count", id)
 }

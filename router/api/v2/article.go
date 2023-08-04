@@ -14,6 +14,8 @@ func ArticleFindById(c *gin.Context) {
 	util.BindUri(c, &param)
 
 	article := service.Article.FindById(param.Id)
+	increment := service.Article.IncrAndGetReadCount(param.Id, c.ClientIP())
+	article.ReadCount += increment
 	c.JSON(http.StatusOK, util.RespOK(article))
 }
 
