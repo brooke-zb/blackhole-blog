@@ -13,10 +13,13 @@ import (
 	"strings"
 )
 
+const AbortKey = "bhs.recovery.abort"
+
 func Recovery() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
+				c.Set(AbortKey, true)
 				// Check for a broken connection, as it is not really a
 				// condition that warrants a panic stack trace.
 				var brokenPipe bool

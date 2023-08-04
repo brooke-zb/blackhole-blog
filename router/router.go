@@ -2,6 +2,7 @@ package router
 
 import (
 	"blackhole-blog/middleware/auth"
+	"blackhole-blog/middleware/logger"
 	"blackhole-blog/middleware/no_route"
 	"blackhole-blog/middleware/recovery"
 	"blackhole-blog/router/api/v2"
@@ -12,6 +13,7 @@ func InitRouter() *gin.Engine {
 	r := gin.New()
 
 	r.NoRoute(no_route.NoRoute())
+	r.Use(logger.RouterLog())
 	r.Use(recovery.Recovery())
 	r.Use(auth.Authorization())
 
