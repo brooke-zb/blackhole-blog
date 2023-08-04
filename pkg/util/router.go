@@ -4,6 +4,8 @@ import (
 	"blackhole-blog/service"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"net/http"
+	"strconv"
 )
 
 // BindJSON is a wrapper of gin.Context.ShouldBindJSON.
@@ -49,6 +51,10 @@ func panicReadable(err error) {
 		for _, val := range errMap {
 			errorMsg += "\n" + val
 		}
-		panic(service.NewError(422, errorMsg))
+		panic(service.NewError(http.StatusUnprocessableEntity, errorMsg))
 	}
+	if _, ok := err.(*strconv.NumError); ok {
+		panic(service.NewError(http.StatusUnprocessableEntity, "参数转换失败，类型错误"))
+	}
+	panic(err)
 }
