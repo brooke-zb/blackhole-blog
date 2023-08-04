@@ -40,6 +40,11 @@ type config struct {
 		Password string `mapstructure:"password"`
 		LogMode  string `mapstructure:"log_mode"`
 	} `mapstructure:"database"`
+	Redis struct {
+		Host     string `mapstructure:"host"`
+		Port     int    `mapstructure:"port"`
+		Password string `mapstructure:"password"`
+	} `mapstructure:"redis"`
 	Log struct {
 		Default LogConfig `mapstructure:"default"`
 		Api     LogConfig `mapstructure:"api"`

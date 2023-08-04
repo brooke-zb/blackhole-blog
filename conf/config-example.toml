@@ -28,6 +28,11 @@ username = 'root'
 password = '12345678'
 log_mode = 'silent'
 
+[redis]
+host = '127.0.0.1'
+port = 6379
+password = ''
+
 [words-filter]
 words-path = ''
 
