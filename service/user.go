@@ -4,8 +4,10 @@ import (
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/cache"
 	"blackhole-blog/pkg/dao"
+	"blackhole-blog/pkg/util"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
+	"net/http"
 )
 
 type userService struct{}
@@ -31,12 +33,12 @@ func (userService) CheckUser(username string, password string) uint64 {
 	// check password
 	hashErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if hashErr != nil {
-		panic(NewError(Unauthorized, "密码错误"))
+		panic(util.NewError(http.StatusUnauthorized, "密码错误"))
 	}
 
 	// check enabled
 	if !user.Enabled {
-		panic(NewError(Unauthorized, "该用户已被禁用"))
+		panic(util.NewError(http.StatusUnauthorized, "该用户已被禁用"))
 	}
 
 	return user.Uid
@@ -62,7 +64,7 @@ func (userService) UpdatePassword(id uint64, updatePasswordBody dto.UserUpdatePa
 	panicNotFoundErrIfNotNil(daoErr, "未找到该用户")
 	hashErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(updatePasswordBody.OldPassword))
 	if hashErr != nil {
-		panic(NewError(Unauthorized, "密码错误"))
+		panic(util.NewError(http.StatusUnauthorized, "密码错误"))
 	}
 
 	// hash password

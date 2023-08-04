@@ -3,7 +3,6 @@ package recovery
 import (
 	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/util"
-	"blackhole-blog/service"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net"
@@ -38,7 +37,7 @@ func Recovery() gin.HandlerFunc {
 					c.Error(err.(error)) // nolint: errcheck
 					c.Abort()
 					log.Err.Errorf("%s %s : %s\n%s", c.Request.Method, c.Request.URL.Path, c.Errors.String(), string(debug.Stack()))
-				} else if serviceErr, ok := err.(service.Error); ok {
+				} else if serviceErr, ok := err.(util.Error); ok {
 					// service error
 					c.AbortWithStatusJSON(serviceErr.Code(), util.RespFail(serviceErr.Error()))
 					if serviceErr.E() != nil {

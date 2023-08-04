@@ -3,7 +3,6 @@ package v2
 import (
 	"blackhole-blog/middleware/auth"
 	"blackhole-blog/models/dto"
-	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/service"
@@ -29,8 +28,7 @@ func AccountLogin(c *gin.Context) {
 	// generate jwt token
 	token, err := util.GenerateToken(uid, expire)
 	if err != nil {
-		log.Err.Error(err.Error())
-		panic(service.NewError(service.InternalError, service.InternalErrorMessage))
+		panic(util.NewInternalError(err))
 	}
 
 	util.SetCookie(c, auth.TokenKey, token, int(expire.Seconds()), true)

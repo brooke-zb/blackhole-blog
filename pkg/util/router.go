@@ -1,7 +1,6 @@
 package util
 
 import (
-	"blackhole-blog/service"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -51,10 +50,10 @@ func panicReadable(err error) {
 		for _, val := range errMap {
 			errorMsg += "\n" + val
 		}
-		panic(service.NewError(http.StatusUnprocessableEntity, errorMsg))
+		panic(NewError(http.StatusUnprocessableEntity, errorMsg))
 	}
 	if _, ok := err.(*strconv.NumError); ok {
-		panic(service.NewError(http.StatusUnprocessableEntity, "参数转换失败，类型错误"))
+		panic(NewError(http.StatusUnprocessableEntity, "参数转换失败，类型错误"))
 	}
 	panic(err)
 }

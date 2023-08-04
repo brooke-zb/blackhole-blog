@@ -7,6 +7,7 @@ import (
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/service"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 const (
@@ -74,7 +75,7 @@ func ShouldGetUser(c *gin.Context) (user dto.UserDto, exists bool) {
 func MustGetUser(c *gin.Context) dto.UserDto {
 	user, exists := ShouldGetUser(c)
 	if !exists {
-		panic(service.NewError(service.Unauthorized, service.UnauthorizedMessage))
+		panic(util.NewError(http.StatusUnauthorized, util.UnauthorizedMessage))
 	}
 	return user
 }

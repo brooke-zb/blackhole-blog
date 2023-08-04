@@ -3,8 +3,10 @@
 package service
 
 import (
+	"blackhole-blog/pkg/util"
 	"errors"
 	"gorm.io/gorm"
+	"net/http"
 )
 
 var (
@@ -12,64 +14,18 @@ var (
 	Article = articleService{}
 )
 
-const (
-	Unauthorized  = 401
-	NotFound      = 404
-	InternalError = 500
-
-	UnauthorizedMessage  = "请登录后再进行操作"
-	InternalErrorMessage = "内部错误，请联系管理员"
-)
-
-// Error is an interface for error with error code
-type Error interface {
-	error
-	Code() int
-	E() error
-}
-
-type errorImpl struct {
-	code    int
-	message string
-	err     error
-}
-
-func (e *errorImpl) Error() string {
-	return e.message
-}
-
-func (e *errorImpl) Code() int {
-	return e.code
-}
-
-func (e *errorImpl) E() error {
-	return e.err
-}
-
-func NewError(code int, message string) Error {
-	return &errorImpl{code: code, message: message}
-}
-
-func NewInternalError(err error) Error {
-	return &errorImpl{
-		code:    InternalError,
-		message: InternalErrorMessage,
-		err:     err,
-	}
-}
-
 func panicErrIfNotNil(err error) {
 	if err != nil {
-		panic(NewInternalError(err))
+		panic(util.NewInternalError(err))
 	}
 }
 
 func panicNotFoundErrIfNotNil(err error, notFoundMsg string) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			panic(NewError(NotFound, notFoundMsg))
+			panic(util.NewError(http.StatusNotFound, notFoundMsg))
 		} else {
-			panic(NewInternalError(err))
+			panic(util.NewInternalError(err))
 		}
 	}
 }
