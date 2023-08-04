@@ -16,16 +16,18 @@ const (
 
 func Authorization() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// while catch panic, clear token
 		defer func() {
 			r := recover()
 			if r != nil {
-				err, ok := r.(service.Error)
+				err, ok := r.(error)
 				if ok {
 					log.Err.Error(err.Error())
 				}
 				util.SetCookie(c, TokenKey, "", -1, true)
 			}
 		}()
+
 		// get token from cookie
 		token, err := c.Cookie(TokenKey)
 
@@ -40,8 +42,7 @@ func Authorization() gin.HandlerFunc {
 		// verify token
 		claims, err := util.VerifyToken(token)
 		if err != nil {
-			log.Err.Error(err.Error())
-			return
+			panic(err)
 		}
 
 		// get user by uid
