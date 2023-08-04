@@ -49,3 +49,19 @@ func NewInternalError(err error) Error {
 		err:     err,
 	}
 }
+
+func panicErrIfNotNil(err error) {
+	if err != nil {
+		panic(NewInternalError(err))
+	}
+}
+
+func panicNotFoundErrIfNotNil(err error, notFoundMsg string) {
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			panic(NewError(NotFound, notFoundMsg))
+		} else {
+			panic(NewInternalError(err))
+		}
+	}
+}
