@@ -19,7 +19,7 @@ func (userDao) FindByName(username string) (user models.User, err error) {
 
 func (userDao) FindList(page int, pageSize int) (users models.Page[models.User], err error) {
 	users.Page = page
-	users.PageSize = pageSize
+	users.Size = pageSize
 	err = db.Model(&models.User{}).Preload("Role").Preload("Role.Permissions").
 		Count(&users.Total).
 		Limit(pageSize).Offset((page - 1) * pageSize).

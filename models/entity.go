@@ -7,8 +7,9 @@ type Article struct {
 	Uid         uint64
 	User        User `gorm:"foreignKey:Uid;references:Uid"`
 	Cid         uint64
-	Category    Category `gorm:"foreignKey:Cid;references:Cid"`
-	Tags        []Tag    `gorm:"many2many:tagRelation;joinForeignKey:Aid;joinReferences:Tid"`
+	Category    Category    `gorm:"foreignKey:Cid;references:Cid"`
+	Tags        []Tag       `gorm:"many2many:tagRelation;joinForeignKey:Aid;joinReferences:Tid"`
+	TagRelation TagRelation `gorm:"foreignKey:Aid;references:Aid"`
 	Title       string
 	Content     string
 	Commentable bool
@@ -29,9 +30,10 @@ type Category struct {
 }
 
 type Tag struct {
-	Tid      uint64 `gorm:"primaryKey"`
-	Name     string
-	Articles []Article `gorm:"many2many:tag_relation;joinForeignKey:Tid;joinReferences:Aid"`
+	Tid         uint64 `gorm:"primaryKey"`
+	Name        string
+	Articles    []Article   `gorm:"many2many:tag_relation;joinForeignKey:Tid;joinReferences:Aid"`
+	TagRelation TagRelation `gorm:"foreignKey:Tid;references:Tid"`
 }
 
 type TagRelation struct {
