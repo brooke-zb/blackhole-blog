@@ -19,7 +19,7 @@ func (userService) FindById(id uint64) (res dto.UserDto) {
 	if userCache != nil && !userCache.Expired() {
 		return userCache.Value()
 	}
-	defer cache.DeferredSetCacheWithRevocer(cache.User, cacheKey, &res)()
+	defer cache.DeferredSetWithRevocer(cache.User, cacheKey, &res)()
 
 	user, daoErr := dao.User.FindById(id)
 	panicNotFoundErrIfNotNil(daoErr, "未找到该用户")
@@ -47,7 +47,7 @@ func (userService) CheckUser(username string, password string) uint64 {
 func (userService) UpdateInfo(id uint64, updateInfoBody dto.UserUpdateInfoDto) {
 	// cache
 	cacheKey := fmt.Sprintf("user:%d", id)
-	cache.User.Delete(cacheKey)
+	defer cache.DeferredDeleteWithRevocer(cache.User, cacheKey)()
 
 	// update user info
 	daoErr := dao.User.UpdateInfo(id, updateInfoBody)
@@ -57,7 +57,7 @@ func (userService) UpdateInfo(id uint64, updateInfoBody dto.UserUpdateInfoDto) {
 func (userService) UpdatePassword(id uint64, updatePasswordBody dto.UserUpdatePasswordDto) {
 	// cache
 	cacheKey := fmt.Sprintf("user:%d", id)
-	cache.User.Delete(cacheKey)
+	defer cache.DeferredDeleteWithRevocer(cache.User, cacheKey)()
 
 	// check password
 	user, daoErr := dao.User.FindById(id)
