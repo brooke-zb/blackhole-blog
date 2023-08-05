@@ -22,7 +22,7 @@ func (articleService) FindById(id uint64) (res dto.ArticleDto) {
 	defer cache.DeferredSetWithRevocer(cache.Article, cacheKey, &res)()
 
 	article, daoErr := dao.Article.FindById(id)
-	panicNotFoundErrIfNotNil(daoErr, "未找到该文章")
+	panicSelectErrIfNotNil(daoErr, "未找到该文章")
 	return dto.ToArticleDto(article)
 }
 

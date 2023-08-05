@@ -22,13 +22,13 @@ func (userService) FindById(id uint64) (res dto.UserDto) {
 	defer cache.DeferredSetWithRevocer(cache.User, cacheKey, &res)()
 
 	user, daoErr := dao.User.FindById(id)
-	panicNotFoundErrIfNotNil(daoErr, "未找到该用户")
+	panicSelectErrIfNotNil(daoErr, "未找到该用户")
 	return dto.ToUserDto(user)
 }
 
 func (userService) CheckUser(username string, password string) uint64 {
 	user, daoErr := dao.User.FindByName(username)
-	panicNotFoundErrIfNotNil(daoErr, "未找到该用户")
+	panicSelectErrIfNotNil(daoErr, "未找到该用户")
 
 	// check password
 	hashErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
@@ -61,7 +61,7 @@ func (userService) UpdatePassword(id uint64, updatePasswordBody dto.UserUpdatePa
 
 	// check password
 	user, daoErr := dao.User.FindById(id)
-	panicNotFoundErrIfNotNil(daoErr, "未找到该用户")
+	panicSelectErrIfNotNil(daoErr, "未找到该用户")
 	hashErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(updatePasswordBody.OldPassword))
 	if hashErr != nil {
 		panic(util.NewError(http.StatusUnauthorized, "密码错误"))
