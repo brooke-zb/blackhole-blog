@@ -13,6 +13,7 @@ type Article struct {
 	Title       string
 	Content     string
 	Commentable bool
+	Comments    []Comment `gorm:"foreignKey:Aid;references:Aid"`
 	CreatedAt   time.Time
 	UpdatedAt   *time.Time
 	Status      string
@@ -20,30 +21,34 @@ type Article struct {
 }
 
 type PinArticle struct {
-	Aid    uint64 `gorm:"primaryKey;autoIncrement:false"`
-	Weight int
+	Aid     uint64  `gorm:"primaryKey;autoIncrement:false"`
+	Article Article `gorm:"foreignKey:Aid;references:Aid"`
+	Weight  int
 }
 
 type Category struct {
-	Cid  uint64 `gorm:"primaryKey"`
-	Name string
+	Cid      uint64 `gorm:"primaryKey"`
+	Name     string
+	Articles []Article `gorm:"foreignKey:Cid;references:Cid"`
 }
 
 type Tag struct {
-	Tid         uint64 `gorm:"primaryKey"`
-	Name        string
-	Articles    []Article   `gorm:"many2many:tag_relation;joinForeignKey:Tid;joinReferences:Aid"`
-	TagRelation TagRelation `gorm:"foreignKey:Tid;references:Tid"`
+	Tid      uint64 `gorm:"primaryKey"`
+	Name     string
+	Articles []Article `gorm:"many2many:tagRelation;joinForeignKey:Tid;joinReferences:Aid"`
 }
 
 type TagRelation struct {
-	Aid uint64 `gorm:"primaryKey;autoIncrement:false"`
-	Tid uint64 `gorm:"primaryKey;autoIncrement:false"`
+	Aid     uint64   `gorm:"primaryKey;autoIncrement:false"`
+	Tid     uint64   `gorm:"primaryKey;autoIncrement:false"`
+	Article *Article `gorm:"foreignKey:Aid;references:Aid"`
+	Tag     *Tag     `gorm:"foreignKey:Tid;references:Tid"`
 }
 
 type Comment struct {
 	Coid      uint64 `gorm:"primaryKey;autoIncrement:false"`
 	Aid       uint64
+	Article   Article `gorm:"foreignKey:Aid;references:Aid"`
 	Uid       uint64
 	Nickname  string
 	Email     string
@@ -79,6 +84,7 @@ type User struct {
 	Mail     string
 	Link     *string
 	Enabled  bool
+	Articles []Article `gorm:"foreignKey:Uid;references:Uid"`
 }
 
 type FriendlyLink struct {

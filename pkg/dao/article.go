@@ -27,8 +27,8 @@ func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.
 
 	// 根据标签名查询
 	if clause.Tag != nil {
-		q = q.InnerJoins("TagRelation").
-			Where("TagRelation.tid = (?)", db.Model(&models.Tag{}).Select("tid").Where("name = ?", *clause.Tag))
+		q = q.InnerJoins("TagRelation").InnerJoins("TagRelation.Tag").
+			Where("TagRelation__Tag.name = ?", *clause.Tag)
 	}
 
 	err = q.Count(&articles.Total).
