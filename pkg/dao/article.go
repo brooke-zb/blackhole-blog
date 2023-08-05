@@ -2,12 +2,13 @@ package dao
 
 import (
 	"blackhole-blog/models"
+	"gorm.io/gorm"
 )
 
 type articleDao struct{}
 
-func (articleDao) FindById(uid uint64) (article models.Article, err error) {
-	err = db.Model(&models.Article{}).Preload("Tags").Preload("Category").Take(&article, uid).Error
+func (articleDao) FindById(aid uint64) (article models.Article, err error) {
+	err = db.Model(&models.Article{}).Preload("Tags").Preload("Category").Take(&article, aid).Error
 	return
 }
 
@@ -33,5 +34,10 @@ func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.
 	err = q.Count(&articles.Total).
 		Limit(clause.Size).Offset((clause.Page - 1) * clause.Size).
 		Find(&articles.Data).Error
+	return
+}
+
+func (articleDao) UpdateReadCount(aid uint64, incr int64) (err error) {
+	err = db.Model(&models.Article{}).Where("aid = ?", aid).Update("read_count", gorm.Expr("read_count + ?", incr)).Error
 	return
 }

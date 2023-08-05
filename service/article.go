@@ -67,3 +67,12 @@ func (articleService) IncrAndGetReadCount(id uint64, ip string) int {
 func getArticleReadCountKey(id uint64) string {
 	return fmt.Sprintf("%s%d", setting.ArticleReadCountPrefix, id)
 }
+
+func (articleService) UpdateReadCount(aid uint64, incr int64) {
+	// cache
+	cacheKey := fmt.Sprintf("article:%d", aid)
+	defer cache.DeferredDeleteWithRevocer(cache.Article, cacheKey)()
+
+	err := dao.Article.UpdateReadCount(aid, incr)
+	panicErrIfNotNil(err)
+}

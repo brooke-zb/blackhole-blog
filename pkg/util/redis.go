@@ -41,6 +41,10 @@ func (redisWrapper) Del(key string) error {
 	return redisClient.Del(ctx, key).Err()
 }
 
+func (redisWrapper) Keys(pattern string) ([]string, error) {
+	return redisClient.Keys(ctx, pattern).Result()
+}
+
 func (redisWrapper) PFAdd(key string, els ...interface{}) error {
 	return redisClient.PFAdd(ctx, key, els...).Err()
 }

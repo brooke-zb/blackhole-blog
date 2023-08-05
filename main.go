@@ -6,17 +6,19 @@ import (
 	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/router"
+	"blackhole-blog/task"
 	"fmt"
 )
 
 func init() {
 	setting.Setup()
 	log.Setup()
-	dao.Setup()
 	util.Setup()
+	dao.Setup()
+	task.Setup()
 }
 
 func main() {
-	router := router.InitRouter()
-	router.Run(fmt.Sprintf("%s:%d", setting.Config.Server.Host, setting.Config.Server.Port))
+	r := router.InitRouter()
+	r.Run(fmt.Sprintf("%s:%d", setting.Config.Server.Host, setting.Config.Server.Port))
 }
