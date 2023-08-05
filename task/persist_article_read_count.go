@@ -14,6 +14,9 @@ func persistArticleReadCountTask() {
 
 	successCount := 0
 	failCount := 0
+	defer func() {
+		log.Default.Infof("PersistArticleReadCountTask: task finish, success: %d, fail: %d", successCount, failCount)
+	}()
 	keys, err := util.Redis.Keys(fmt.Sprintf("%s*", setting.ArticleReadCountPrefix))
 	if err != nil {
 		log.Default.Errorf("PersistArticleReadCountTask: get keys fail with reason: %s", err.Error())
@@ -52,6 +55,4 @@ func persistArticleReadCountTask() {
 			}
 		}()
 	}
-
-	log.Default.Infof("PersistArticleReadCountTask: task finish, success: %d, fail: %d", successCount, failCount)
 }
