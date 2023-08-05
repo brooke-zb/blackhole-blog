@@ -1,10 +1,8 @@
 package util
 
-import "net/http"
-
-const (
-	UnauthorizedMessage  = "请登录后再进行操作"
-	InternalErrorMessage = "内部错误，请联系管理员"
+import (
+	"blackhole-blog/pkg/setting"
+	"net/http"
 )
 
 // Error is an interface for error with error code
@@ -39,7 +37,7 @@ func NewError(code int, message string) Error {
 func NewInternalError(err error) Error {
 	return &errorImpl{
 		code:    http.StatusInternalServerError,
-		message: InternalErrorMessage,
+		message: setting.InternalErrorMessage,
 		err:     err,
 	}
 }

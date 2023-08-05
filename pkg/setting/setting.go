@@ -1,3 +1,4 @@
+// Package setting store all the configuration and constant of this project.
 package setting
 
 import (
@@ -58,6 +59,13 @@ type config struct {
 }
 
 var Config = config{}
+
+const (
+	ArticleReadCountPrefix = "bhs:article:read_count:"
+	RecoveryAbortKey       = "bhs.recovery.abort"
+	UnauthorizedMessage    = "请登录后再进行操作"
+	InternalErrorMessage   = "内部错误，请联系管理员"
+)
 
 func readConfigPath() (path string) {
 	// flag

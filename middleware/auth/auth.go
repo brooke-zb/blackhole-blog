@@ -75,7 +75,7 @@ func ShouldGetUser(c *gin.Context) (user dto.UserDto, exists bool) {
 func MustGetUser(c *gin.Context) dto.UserDto {
 	user, exists := ShouldGetUser(c)
 	if !exists {
-		panic(util.NewError(http.StatusUnauthorized, util.UnauthorizedMessage))
+		panic(util.NewError(http.StatusUnauthorized, setting.UnauthorizedMessage))
 	}
 	return user
 }

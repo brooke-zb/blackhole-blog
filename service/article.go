@@ -5,6 +5,7 @@ import (
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/cache"
 	"blackhole-blog/pkg/dao"
+	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
 	"fmt"
 )
@@ -18,7 +19,7 @@ func (articleService) FindById(id uint64) (res dto.ArticleDto) {
 	if articleCache != nil && !articleCache.Expired() {
 		return articleCache.Value()
 	}
-	defer cache.DeferredSetCacheWithRevocer(cache.Article, cacheKey, &res)()
+	defer cache.DeferredSetWithRevocer(cache.Article, cacheKey, &res)()
 
 	article, daoErr := dao.Article.FindById(id)
 	panicNotFoundErrIfNotNil(daoErr, "未找到该文章")
@@ -64,5 +65,5 @@ func (articleService) IncrAndGetReadCount(id uint64, ip string) int {
 }
 
 func getArticleReadCountKey(id uint64) string {
-	return fmt.Sprintf("bhs:article:%d:read_count", id)
+	return fmt.Sprintf("%s%d", setting.ArticleReadCountPrefix, id)
 }
