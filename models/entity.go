@@ -35,9 +35,10 @@ type Category struct {
 }
 
 type Tag struct {
-	Tid      uint64 `gorm:"primaryKey"`
-	Name     string
-	Articles []Article `gorm:"many2many:tagRelation;joinForeignKey:Tid;joinReferences:Aid"`
+	Tid          uint64 `gorm:"primaryKey"`
+	Name         string
+	Articles     []Article `gorm:"many2many:tagRelation;joinForeignKey:Tid;joinReferences:Aid"`
+	ArticleCount int
 }
 
 type TagRelation struct {

@@ -15,6 +15,7 @@ var (
 	Article  = articleService{}
 	Comment  = commentService{}
 	Category = categoryService{}
+	Tag      = tagService{}
 )
 
 type errorEntry struct {

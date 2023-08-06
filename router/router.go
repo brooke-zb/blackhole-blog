@@ -47,6 +47,7 @@ func InitRouter() *gin.Engine {
 	tag := r.Group("/tag")
 	{
 		tag.GET("/:name/article", v2.ArticleFindListByTag) // 获取标签文章列表
+		tag.GET("", v2.TagFindList)                        // 获取标签列表
 	}
 
 	return r
