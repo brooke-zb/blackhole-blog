@@ -15,7 +15,7 @@ var (
 	Redis       = redisWrapper{}
 )
 
-func InitRedis() {
+func initRedis() {
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", setting.Config.Redis.Host, setting.Config.Redis.Port),
 		Password: setting.Config.Redis.Password,

@@ -1,6 +1,7 @@
 package util
 
 import (
+	"blackhole-blog/pkg/log"
 	"fmt"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
@@ -13,7 +14,8 @@ import (
 
 var translator ut.Translator
 
-func InitTrans(locale string) (err error) {
+func initTrans(locale string) {
+	var err error
 	// 修改gin框架中的Validator引擎属性，实现自定制
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 
@@ -29,7 +31,7 @@ func InitTrans(locale string) (err error) {
 		// 也可以使用 uni.FindTranslator(...) 传入多个locale进行查找
 		translator, ok = uni.GetTranslator(locale)
 		if !ok {
-			return fmt.Errorf("uni.GetTranslator(%s) failed", locale)
+			err = fmt.Errorf("uni.GetTranslator(%s) failed", locale)
 		}
 
 		// 注册翻译器
@@ -41,7 +43,8 @@ func InitTrans(locale string) (err error) {
 		default:
 			err = enTranslations.RegisterDefaultTranslations(v, translator)
 		}
-		return
 	}
-	return
+	if err != nil {
+		log.Default.Error(err.Error())
+	}
 }

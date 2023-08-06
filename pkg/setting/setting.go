@@ -56,6 +56,9 @@ type config struct {
 			PersistArticleReadCount string `mapstructure:"persist-article-read-count"`
 		} `mapstructure:"cron"`
 	} `mapstructure:"task"`
+	WordsFilter struct {
+		WordsPath *string `mapstructure:"words-path"`
+	} `mapstructure:"words-filter"`
 }
 
 var Config = config{}

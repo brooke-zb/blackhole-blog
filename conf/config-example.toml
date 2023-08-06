@@ -34,7 +34,7 @@ port = 6379
 password = ''
 
 [words-filter]
-words-path = ''
+words-path = '/path/to/words.txt'
 
 [task.cron]
 persist-article-read-count = '0 0 0 * * ?'

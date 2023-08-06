@@ -44,12 +44,12 @@ func panicErrIfNotNil(err error, entries ...errorEntry) {
 
 // panicSelectErrIfNotNil panics a util.Error if err is not nil.
 // use to handle gorm.ErrRecordNotFound with custom error message.
-func panicSelectErrIfNotNil(err error, msg string) {
+func panicSelectErrIfNotNil(err error, notFoundMsg string) {
 	if err == nil {
 		return
 	}
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		panic(util.NewError(http.StatusNotFound, msg))
+		panic(util.NewError(http.StatusNotFound, notFoundMsg))
 	}
 	panic(util.NewInternalError(err))
 }
