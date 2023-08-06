@@ -28,9 +28,10 @@ type PinArticle struct {
 }
 
 type Category struct {
-	Cid      uint64 `gorm:"primaryKey"`
-	Name     string
-	Articles []Article `gorm:"foreignKey:Cid;references:Cid"`
+	Cid          uint64 `gorm:"primaryKey"`
+	Name         string
+	Articles     []Article `gorm:"foreignKey:Cid;references:Cid"`
+	ArticleCount int
 }
 
 type Tag struct {

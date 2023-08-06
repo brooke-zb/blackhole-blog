@@ -12,9 +12,10 @@ import (
 var db *gorm.DB
 
 var (
-	User    = userDao{}
-	Article = articleDao{}
-	Comment = commentDao{}
+	User     = userDao{}
+	Article  = articleDao{}
+	Comment  = commentDao{}
+	Category = categoryDao{}
 )
 
 func Setup() {

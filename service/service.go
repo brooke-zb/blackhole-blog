@@ -11,9 +11,10 @@ import (
 )
 
 var (
-	User    = userService{}
-	Article = articleService{}
-	Comment = commentService{}
+	User     = userService{}
+	Article  = articleService{}
+	Comment  = commentService{}
+	Category = categoryService{}
 )
 
 type errorEntry struct {
