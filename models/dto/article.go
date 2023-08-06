@@ -7,6 +7,7 @@ import (
 
 type ArticleDto struct {
 	Aid         uint64             `json:"aid"`
+	Uid         uint64             `json:"uid"`
 	Category    ArticleCategoryDto `json:"category"`
 	Tags        []ArticleTagDto    `json:"tags"`
 	Title       string             `json:"title"`
@@ -38,6 +39,7 @@ type ArticleTagDto struct {
 func ToArticleDto(article models.Article) ArticleDto {
 	articleDto := ArticleDto{
 		Aid: article.Aid,
+		Uid: article.Uid,
 		Category: ArticleCategoryDto{
 			Cid:  article.Category.Cid,
 			Name: article.Category.Name,

@@ -44,3 +44,8 @@ func (commentDao) FindList(clause models.CommentClause) (comments models.Page[mo
 		Find(&comments.Data).Error
 	return
 }
+
+func (commentDao) Insert(comment models.Comment) (err error) {
+	err = db.Create(&comment).Error
+	return
+}

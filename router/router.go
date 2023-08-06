@@ -33,6 +33,11 @@ func InitRouter() *gin.Engine {
 		article.GET("/:id/comment", v2.CommentFindListByArticleId) // 获取文章评论列表
 	}
 
+	comment := r.Group("/comment")
+	{
+		comment.POST("", v2.CommentAdd) // 添加评论
+	}
+
 	category := r.Group("/category")
 	{
 		category.GET("/:name/article", v2.ArticleFindListByCategory) // 获取分类文章列表

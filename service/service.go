@@ -17,12 +17,17 @@ var (
 )
 
 type errorEntry struct {
-	Code    uint16
-	Message string
+	Code        uint16
+	Message     string
+	MsgProducer func(msg string) string
 }
 
 func entryErr(errCode uint16, errMsg string) errorEntry {
 	return errorEntry{Code: errCode, Message: errMsg}
+}
+
+func entryErrProducer(errCode uint16, msgProducer func(msg string) string) errorEntry {
+	return errorEntry{Code: errCode, MsgProducer: msgProducer}
 }
 
 // panicErrIfNotNil panics a util.Error if err is not nil.
@@ -35,6 +40,9 @@ func panicErrIfNotNil(err error, entries ...errorEntry) {
 	if ok {
 		for _, entry := range entries {
 			if mysqlErr.Number == entry.Code {
+				if entry.MsgProducer != nil {
+					panic(util.NewError(http.StatusBadRequest, entry.MsgProducer(mysqlErr.Message)))
+				}
 				panic(util.NewError(http.StatusBadRequest, entry.Message))
 			}
 		}

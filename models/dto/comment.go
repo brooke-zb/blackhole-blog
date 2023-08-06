@@ -18,6 +18,15 @@ type CommentDto struct {
 	ReplyTo   *string      `json:"replyTo"`
 }
 
+type CommentAddDto struct {
+	Aid      uint64  `json:"aid" binding:"required"`
+	Nickname string  `json:"nickname" binding:"required"`
+	Content  string  `json:"content" binding:"required"`
+	ReplyId  *uint64 `json:"replyId"`
+	Uid      *uint64 `json:"-"`
+	Ip       string  `json:"-"`
+}
+
 func ToCommentDtoList(comments models.Page[models.Comment]) (res models.Page[CommentDto]) {
 	commentListDto := models.Page[CommentDto]{
 		Total: comments.Total,
@@ -48,4 +57,15 @@ func ToCommentDto(comment models.Comment) CommentDto {
 		commentDto.Children[i] = ToCommentDto(child)
 	}
 	return commentDto
+}
+
+func ToComment(commentAddDto CommentAddDto) models.Comment {
+	return models.Comment{
+		Aid:      commentAddDto.Aid,
+		Nickname: commentAddDto.Nickname,
+		Content:  commentAddDto.Content,
+		ReplyId:  commentAddDto.ReplyId,
+		Uid:      commentAddDto.Uid,
+		Ip:       commentAddDto.Ip,
+	}
 }

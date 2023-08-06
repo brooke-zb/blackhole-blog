@@ -4,10 +4,12 @@ import (
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/cache"
 	"blackhole-blog/pkg/dao"
+	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strings"
 )
 
 type userService struct{}
@@ -51,7 +53,17 @@ func (userService) UpdateInfo(id uint64, updateInfoBody dto.UserUpdateInfoDto) {
 
 	// update user info
 	daoErr := dao.User.UpdateInfo(id, updateInfoBody)
-	panicErrIfNotNil(daoErr)
+	panicErrIfNotNil(daoErr, entryErrProducer(1062, updateInfoErrProducer))
+}
+
+func updateInfoErrProducer(msg string) string {
+	if strings.Contains(msg, "mail") {
+		return "邮箱已被使用"
+	} else if strings.Contains(msg, "name") {
+		return "昵称已被使用"
+	} else {
+		return setting.InternalErrorMessage
+	}
 }
 
 func (userService) UpdatePassword(id uint64, updatePasswordBody dto.UserUpdatePasswordDto) {
