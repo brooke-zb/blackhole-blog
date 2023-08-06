@@ -19,19 +19,27 @@ func InitRouter() *gin.Engine {
 
 	account := r.Group("/account")
 	{
-		account.POST("/token", v2.AccountLogin)
-		account.DELETE("/token", v2.AccountLogout)
-		account.GET("", v2.AccountInfo)
-		account.PUT("", v2.AccountUpdateInfo)
-		account.PATCH("/password", v2.AccountUpdatePassword)
+		account.POST("/token", v2.AccountLogin)              // 登录
+		account.DELETE("/token", v2.AccountLogout)           // 登出
+		account.GET("", v2.AccountInfo)                      // 获取账号信息
+		account.PUT("", v2.AccountUpdateInfo)                // 更新账号信息
+		account.PATCH("/password", v2.AccountUpdatePassword) // 更改账号密码
 	}
 
 	article := r.Group("/article")
 	{
-		article.GET("/:id", v2.ArticleFindById)
-		article.GET("", v2.ArticleFindList)
-		article.GET("/category/:name", v2.ArticleFindListByCategory)
-		article.GET("/tag/:name", v2.ArticleFindListByTag)
+		article.GET("/:id", v2.ArticleFindById)                    // 获取文章详情
+		article.GET("", v2.ArticleFindList)                        // 获取文章列表
+	}
+
+	category := r.Group("/category")
+	{
+		category.GET("/:name/article", v2.ArticleFindListByCategory) // 获取分类文章列表
+	}
+
+	tag := r.Group("/tag")
+	{
+		tag.GET("/:name/article", v2.ArticleFindListByTag) // 获取标签文章列表
 	}
 
 	return r
