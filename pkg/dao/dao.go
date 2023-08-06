@@ -14,6 +14,7 @@ var db *gorm.DB
 var (
 	User    = userDao{}
 	Article = articleDao{}
+	Comment = commentDao{}
 )
 
 func Setup() {

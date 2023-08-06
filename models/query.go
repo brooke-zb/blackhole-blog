@@ -6,3 +6,13 @@ type ArticleClause struct {
 	Page     int
 	Size     int
 }
+
+type CommentClause struct {
+	Aid                 *uint64
+	IP                  *string
+	Nickname            *string
+	Status              *string
+	OmitSensitiveFields bool
+	Page                int
+	Size                int
+}

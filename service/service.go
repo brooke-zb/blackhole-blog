@@ -13,6 +13,7 @@ import (
 var (
 	User    = userService{}
 	Article = articleService{}
+	Comment = commentService{}
 )
 
 type errorEntry struct {

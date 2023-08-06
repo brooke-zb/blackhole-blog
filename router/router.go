@@ -30,6 +30,7 @@ func InitRouter() *gin.Engine {
 	{
 		article.GET("/:id", v2.ArticleFindById)                    // 获取文章详情
 		article.GET("", v2.ArticleFindList)                        // 获取文章列表
+		article.GET("/:id/comment", v2.CommentFindListByArticleId) // 获取文章评论列表
 	}
 
 	category := r.Group("/category")
