@@ -7,14 +7,14 @@ A simple, security blog system based on [Gin](https://github.com/gin-gonic/gin)
 ## TODO
 
 - [x] custom setting with config file based on [viper](https://github.com/spf13/viper)
-- [ ] RESTful api
+- [x] RESTful api
 - [x] cache service data with [CCache v3](https://github.com/karlseguin/ccache)
 - [x] cache article read count with Redis
 - [x] jwt authentication
 - [x] regenerate jwt while about to expire
 - [ ] RBAC authorization
 - [ ] csrf protection
-- [x] sensitive words filter base on [go-wordsfilter](https://github.com/syyongx/go-wordsfilter)
+- [x] sensitive words filter base on [sensitive](https://github.com/importcjj/sensitive)
 - [ ] mail notification base on [go-mail](https://github.com/wneessen/go-mail)
 - [x] cron task base on [gocron](https://github.com/go-co-op/gocron)
 
