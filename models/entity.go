@@ -16,8 +16,9 @@ type Article struct {
 	Comments    []Comment `gorm:"foreignKey:Aid;references:Aid"`
 	CreatedAt   time.Time
 	UpdatedAt   *time.Time
-	Status      string
-	ReadCount   int
+	// PUBLISHED, DRAFT or HIDDEN
+	Status    string
+	ReadCount int
 }
 
 type PinArticle struct {
@@ -49,18 +50,20 @@ type Comment struct {
 	Coid      uint64 `gorm:"primaryKey;autoIncrement:false"`
 	Aid       uint64
 	Article   Article `gorm:"foreignKey:Aid;references:Aid"`
-	Uid       uint64
+	Uid       *uint64
 	Nickname  string
-	Email     string
-	Site      string
+	Email     *string
+	Avatar    *string `gorm:"<-:false"`
+	Site      *string
 	Ip        string
 	Content   string
 	CreatedAt time.Time
-	Status    string
-	ParentId  *uint64
-	Children  []Comment `gorm:"foreignkey:ParentId"`
-	ReplyId   *uint64
-	ReplyTo   *string
+	// PUBLISHED, REVIEW or HIDDEN
+	Status   string
+	Children []Comment `gorm:"foreignkey:ParentId"`
+	ParentId *uint64
+	ReplyId  *uint64
+	ReplyTo  *string
 }
 
 type Role struct {

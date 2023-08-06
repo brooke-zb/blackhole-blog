@@ -6,36 +6,42 @@ import (
 )
 
 type ArticleDto struct {
-	Aid         uint64
-	Category    ArticleCategoryDto
-	Tags        []ArticleTagDto
-	Title       string
-	Content     string
-	Commentable bool
-	CreatedAt   time.Time
-	UpdatedAt   *time.Time
-	ReadCount   int
+	Aid         uint64             `json:"aid"`
+	Category    ArticleCategoryDto `json:"category"`
+	Tags        []ArticleTagDto    `json:"tags"`
+	Title       string             `json:"title"`
+	Content     string             `json:"content"`
+	Commentable bool               `json:"commentable"`
+	CreatedAt   time.Time          `json:"createdAt"`
+	UpdatedAt   *time.Time         `json:"UpdatedAt"`
+	ReadCount   int                `json:"readCount"`
 }
 
 type ArticlePreviewDto struct {
-	Aid       uint64
-	Category  ArticleCategoryDto
-	Tags      []ArticleTagDto
-	Title     string
-	CreatedAt time.Time
-	ReadCount int
+	Aid       uint64             `json:"aid"`
+	Category  ArticleCategoryDto `json:"category"`
+	Tags      []ArticleTagDto    `json:"tags"`
+	Title     string             `json:"title"`
+	CreatedAt time.Time          `json:"createdAt"`
+	ReadCount int                `json:"readCount"`
 }
 
-type ArticleCategoryDto = models.Category
+type ArticleCategoryDto struct {
+	Cid  uint64 `json:"cid"`
+	Name string `json:"name"`
+}
 
 type ArticleTagDto struct {
-	Name string
+	Name string `json:"name"`
 }
 
 func ToArticleDto(article models.Article) ArticleDto {
 	articleDto := ArticleDto{
-		Aid:         article.Aid,
-		Category:    article.Category,
+		Aid: article.Aid,
+		Category: ArticleCategoryDto{
+			Cid:  article.Category.Cid,
+			Name: article.Category.Name,
+		},
 		Tags:        make([]ArticleTagDto, len(article.Tags)),
 		Title:       article.Title,
 		Content:     article.Content,
@@ -61,8 +67,11 @@ func ToArticlePreviewDtoList(articles models.Page[models.Article]) models.Page[A
 	}
 	for i, article := range articles.Data {
 		articleListDto.Data[i] = ArticlePreviewDto{
-			Aid:       article.Aid,
-			Category:  article.Category,
+			Aid: article.Aid,
+			Category: ArticleCategoryDto{
+				Cid:  article.Category.Cid,
+				Name: article.Category.Name,
+			},
 			Tags:      make([]ArticleTagDto, len(article.Tags)),
 			Title:     article.Title,
 			CreatedAt: article.CreatedAt,
