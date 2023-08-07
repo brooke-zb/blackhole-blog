@@ -31,7 +31,10 @@ type config struct {
 			Path   string `mapstructure:"path"`
 			Domain string `mapstructure:"domain"`
 			Secure bool   `mapstructure:"secure"`
-		}
+		} `mapstructure:"cookie"`
+		Csrf struct {
+			ExcludePatterns []string `mapstructure:"exclude-patterns"`
+		} `mapstructure:"csrf"`
 	} `mapstructure:"server"`
 	Database struct {
 		Host     string `mapstructure:"host"`

@@ -15,6 +15,11 @@ expire = '2h'
 remember-me-expire = '168h' # 7 days
 refresh-before-expire = '30m'
 
+[server.csrf]
+exclude-patterns = [
+    '/account/token'
+]
+
 [server.cookie]
 domain = ''
 path = '/'
