@@ -7,13 +7,6 @@ import (
 	"net/http"
 )
 
-// RequireLogin 检查用户是否登录
-func RequireLogin() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		auth.MustGetUser(c)
-	}
-}
-
 // RequirePermission 检查用户是否有指定权限，包含其中一个权限即可通过
 func RequirePermission(perm ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {

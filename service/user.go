@@ -49,7 +49,7 @@ func (userService) CheckUser(username string, password string) uint64 {
 func (userService) UpdateInfo(id uint64, updateInfoBody dto.UserUpdateInfoDto) {
 	// cache
 	cacheKey := fmt.Sprintf("user:%d", id)
-	defer cache.DeferredDeleteWithRevocer(cache.User, cacheKey)()
+	defer cache.User.Delete(cacheKey)
 
 	// update user info
 	daoErr := dao.User.UpdateInfo(id, updateInfoBody)
@@ -69,7 +69,7 @@ func updateInfoErrProducer(msg string) string {
 func (userService) UpdatePassword(id uint64, updatePasswordBody dto.UserUpdatePasswordDto) {
 	// cache
 	cacheKey := fmt.Sprintf("user:%d", id)
-	defer cache.DeferredDeleteWithRevocer(cache.User, cacheKey)()
+	defer cache.User.Delete(cacheKey)
 
 	// check password
 	user, daoErr := dao.User.FindById(id)
