@@ -2,6 +2,7 @@ package v2
 
 import (
 	"blackhole-blog/middleware/auth"
+	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/service"
@@ -11,13 +12,13 @@ import (
 
 func CommentFindListByArticleId(c *gin.Context) {
 	// bindings
-	param := dto.IdParam{}
+	param := models.IdParam{}
 	util.BindUri(c, &param)
-	page := dto.PageParam{}
+	page := models.PageParam{}
 	util.BindQuery(c, &page)
 
 	// query
-	comments := service.Comment.FindListByArticleId(param.Id, page.GetPage(), page.GetSize())
+	comments := service.Comment.FindListByArticleId(param.Id, page.Page(), page.Size())
 	c.JSON(http.StatusOK, util.RespOK(comments))
 }
 

@@ -28,8 +28,10 @@ func (articleService) FindById(id uint64) (res dto.ArticleDto) {
 
 func (articleService) FindList(page int, size int) (res models.Page[dto.ArticlePreviewDto]) {
 	articles, daoErr := dao.Article.FindPreviewList(models.ArticleClause{
-		Page: page,
-		Size: size,
+		PageParam: models.PageParam{
+			PageVal: page,
+			SizeVal: size,
+		},
 	})
 	panicErrIfNotNil(daoErr)
 	return dto.ToArticlePreviewDtoList(articles)
@@ -37,9 +39,11 @@ func (articleService) FindList(page int, size int) (res models.Page[dto.ArticleP
 
 func (articleService) FindListByTag(tag string, page int, size int) (res models.Page[dto.ArticlePreviewDto]) {
 	articles, daoErr := dao.Article.FindPreviewList(models.ArticleClause{
-		Tag:  &tag,
-		Page: page,
-		Size: size,
+		Tag: &tag,
+		PageParam: models.PageParam{
+			PageVal: page,
+			SizeVal: size,
+		},
 	})
 	panicErrIfNotNil(daoErr)
 	return dto.ToArticlePreviewDtoList(articles)
@@ -48,8 +52,10 @@ func (articleService) FindListByTag(tag string, page int, size int) (res models.
 func (articleService) FindListByCategory(category string, page int, size int) (res models.Page[dto.ArticlePreviewDto]) {
 	articles, daoErr := dao.Article.FindPreviewList(models.ArticleClause{
 		Category: &category,
-		Page:     page,
-		Size:     size,
+		PageParam: models.PageParam{
+			PageVal: page,
+			SizeVal: size,
+		},
 	})
 	panicErrIfNotNil(daoErr)
 	return dto.ToArticlePreviewDtoList(articles)

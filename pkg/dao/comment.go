@@ -10,8 +10,8 @@ func (commentDao) FindById(coid uint64) (comment models.Comment, err error) {
 }
 
 func (commentDao) FindList(clause models.CommentClause) (comments models.Page[models.Comment], err error) {
-	comments.Page = clause.Page
-	comments.Size = clause.Size
+	comments.Page = clause.Page()
+	comments.Size = clause.Size()
 	tx := db.Model(&models.Comment{}).Preload("Children").Where("parent_id is null")
 
 	// 是否过滤敏感字段
@@ -40,7 +40,7 @@ func (commentDao) FindList(clause models.CommentClause) (comments models.Page[mo
 	}
 
 	err = tx.Count(&comments.Total).
-		Limit(clause.Size).Offset((clause.Page - 1) * clause.Size).
+		Limit(clause.Size()).Offset((clause.Page() - 1) * clause.Size()).
 		Find(&comments.Data).Error
 	return
 }

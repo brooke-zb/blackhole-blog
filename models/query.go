@@ -1,18 +1,22 @@
 package models
 
 type ArticleClause struct {
-	Category *string
-	Tag      *string
-	Page     int
-	Size     int
+	PageParam
+	Category *string `form:"category"`
+	Tag      *string `form:"tag"`
 }
 
 type CommentClause struct {
-	Aid                 *uint64
-	IP                  *string
-	Nickname            *string
-	Status              *string
-	OmitSensitiveFields bool
-	Page                int
-	Size                int
+	PageParam
+	Aid                 *uint64 `form:"aid"`
+	IP                  *string `form:"ip"`
+	Nickname            *string `form:"nickname"`
+	Status              *string `form:"status"`
+	OmitSensitiveFields bool    `form:"-"`
+}
+
+type UserClause struct {
+	PageParam
+	Name    *string `form:"name"`
+	Enabled *bool   `form:"enabled"`
 }

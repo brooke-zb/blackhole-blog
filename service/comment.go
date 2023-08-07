@@ -22,8 +22,10 @@ func (commentService) FindListByArticleId(articleId uint64, page int, size int) 
 	comments, daoErr := dao.Comment.FindList(models.CommentClause{
 		Aid:    &articleId,
 		Status: &statusPublished,
-		Page:   page,
-		Size:   size,
+		PageParam: models.PageParam{
+			PageVal: page,
+			SizeVal: size,
+		},
 	})
 	panicErrIfNotNil(daoErr)
 	return dto.ToCommentDtoList(comments)

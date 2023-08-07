@@ -19,8 +19,8 @@ func (articleDao) FindById(aid uint64) (article models.Article, err error) {
 }
 
 func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.Page[models.Article], err error) {
-	articles.Page = clause.Page
-	articles.Size = clause.Size
+	articles.Page = clause.Page()
+	articles.Size = clause.Size()
 	tx := db.Model(&models.Article{}).Preload("Tags").Preload("Category").
 		Omit("Uid", "Content", "UpdatedAt", "Status").
 		Order("created_at desc")
@@ -38,7 +38,7 @@ func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.
 	}
 
 	err = tx.Count(&articles.Total).
-		Limit(clause.Size).Offset((clause.Page - 1) * clause.Size).
+		Limit(clause.Size()).Offset((clause.Page() - 1) * clause.Size()).
 		Find(&articles.Data).Error
 	return
 }
