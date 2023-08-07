@@ -17,12 +17,23 @@ func (userDao) FindByName(username string) (user models.User, err error) {
 	return
 }
 
-func (userDao) FindList(page int, pageSize int) (users models.Page[models.User], err error) {
-	users.Page = page
-	users.Size = pageSize
-	err = db.Model(&models.User{}).Preload("Role").Preload("Role.Permissions").
-		Count(&users.Total).
-		Limit(pageSize).Offset((page - 1) * pageSize).
+func (userDao) FindList(clause models.UserClause) (users models.Page[models.User], err error) {
+	users.Page = clause.Page()
+	users.Size = clause.Size()
+	tx := db.Model(&models.User{}).Preload("Role").Preload("Role.Permissions")
+
+	// 根据用户名模糊查询
+	if clause.Name != nil {
+		tx = tx.Where("name LIKE CONCAT('%', ?, '%')", *clause.Name)
+	}
+
+	// 根据状态查询
+	if clause.Enabled != nil {
+		tx = tx.Where("enabled = ?", *clause.Enabled)
+	}
+
+	err = tx.Count(&users.Total).
+		Limit(clause.Size()).Offset((clause.Page() - 1) * clause.Size()).
 		Find(&users.Data).Error
 	return
 }
@@ -33,4 +44,18 @@ func (userDao) UpdateInfo(uid uint64, updateInfoBody dto.UserUpdateInfoDto) erro
 
 func (userDao) UpdatePassword(uid uint64, hashedPassword string) error {
 	return db.Model(&models.User{}).Where("uid = ?", uid).Update("password", hashedPassword).Error
+}
+
+func (userDao) Add(user models.User) error {
+	return db.Create(&user).Error
+}
+
+func (userDao) Update(uid uint64, user dto.UserUpdateDto) (int64, error) {
+	tx := db.Model(&models.User{}).Where("uid = ?", uid).Updates(user)
+	return tx.RowsAffected, tx.Error
+}
+
+func (userDao) Delete(uid uint64) (int64, error) {
+	tx := db.Where("uid = ?", uid).Delete(&models.User{})
+	return tx.RowsAffected, tx.Error
 }

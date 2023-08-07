@@ -1,6 +1,7 @@
 package service
 
 import (
+	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/cache"
 	"blackhole-blog/pkg/dao"
@@ -13,6 +14,12 @@ import (
 )
 
 type userService struct{}
+
+func (userService) FindList(clause models.UserClause) models.Page[dto.UserDto] {
+	users, daoErr := dao.User.FindList(clause)
+	panicErrIfNotNil(daoErr)
+	return dto.ToUserDtoList(users)
+}
 
 func (userService) FindById(id uint64) (res dto.UserDto) {
 	// cache
@@ -53,10 +60,10 @@ func (userService) UpdateInfo(id uint64, updateInfoBody dto.UserUpdateInfoDto) {
 
 	// update user info
 	daoErr := dao.User.UpdateInfo(id, updateInfoBody)
-	panicErrIfNotNil(daoErr, entryErrProducer(1062, updateInfoErrProducer))
+	panicErrIfNotNil(daoErr, entryErrProducer(1062, userDuplicateErrProducer))
 }
 
-func updateInfoErrProducer(msg string) string {
+func userDuplicateErrProducer(msg string) string {
 	if strings.Contains(msg, "mail") {
 		return "邮箱已被使用"
 	} else if strings.Contains(msg, "name") {
@@ -85,4 +92,49 @@ func (userService) UpdatePassword(id uint64, updatePasswordBody dto.UserUpdatePa
 	// update password
 	daoErr = dao.User.UpdatePassword(id, string(hashedPassword))
 	panicErrIfNotNil(daoErr)
+}
+
+func (userService) Add(user dto.UserAddDto) {
+	// hash password
+	hashedPassword, hashErr := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	panicErrIfNotNil(hashErr)
+	user.Password = string(hashedPassword)
+
+	// insert user
+	daoErr := dao.User.Add(user.ToUserModel())
+	panicErrIfNotNil(daoErr, entryErrProducer(1062, userDuplicateErrProducer), entryErr(1452, "角色不存在"))
+}
+
+func (userService) Update(user dto.UserUpdateDto) {
+	// cache
+	cacheKey := fmt.Sprintf("user:%d", user.Uid)
+	defer cache.User.Delete(cacheKey)
+
+	// hash password
+	if user.Password != nil {
+		hashedPassword, hashErr := bcrypt.GenerateFromPassword([]byte(*user.Password), bcrypt.DefaultCost)
+		panicErrIfNotNil(hashErr)
+		newPassword := string(hashedPassword)
+		user.Password = &newPassword
+	}
+
+	// update user
+	effects, daoErr := dao.User.Update(user.Uid, user)
+	panicErrIfNotNil(daoErr, entryErrProducer(1062, userDuplicateErrProducer), entryErr(1452, "角色不存在"))
+	if effects == 0 {
+		panic(util.NewError(http.StatusBadRequest, "未找到该用户或用户信息没有变化"))
+	}
+}
+
+func (userService) Delete(id uint64) {
+	// cache
+	cacheKey := fmt.Sprintf("user:%d", id)
+	defer cache.User.Delete(cacheKey)
+
+	// delete user
+	effects, daoErr := dao.User.Delete(id)
+	panicErrIfNotNil(daoErr)
+	if effects == 0 {
+		panic(util.NewError(http.StatusBadRequest, "未找到该用户"))
+	}
 }

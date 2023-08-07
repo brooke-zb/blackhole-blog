@@ -6,7 +6,9 @@ import (
 	"blackhole-blog/middleware/logger"
 	"blackhole-blog/middleware/no_route"
 	"blackhole-blog/middleware/recovery"
+	"blackhole-blog/middleware/security"
 	"blackhole-blog/router/api/v2"
+	"blackhole-blog/router/api/v2/admin"
 	"github.com/gin-gonic/gin"
 )
 
@@ -50,6 +52,19 @@ func InitRouter() *gin.Engine {
 	{
 		tag.GET("/:name/article", v2.ArticleFindListByTag) // 获取标签文章列表
 		tag.GET("", v2.TagFindList)                        // 获取标签列表
+	}
+
+	adminGroup := r.Group("/admin")
+	{
+		user := adminGroup.Group("/user", security.RequirePermission("USER:FULLACCESS"))
+		{
+			user.GET("/:id", admin.UserFindById)  // 获取用户详情
+			user.GET("", admin.UserFindList)      // 获取用户列表
+			user.POST("", admin.UserAdd)          // 添加用户
+			user.PUT("/:id", admin.UserUpdate)    // 修改用户
+			user.DELETE("/:id", admin.UserDelete) // 删除用户
+		}
+
 	}
 
 	return r
