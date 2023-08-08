@@ -1,6 +1,7 @@
 package util
 
 import (
+	"blackhole-blog/pkg/log"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -55,5 +56,6 @@ func panicReadable(err error) {
 	if _, ok := err.(*strconv.NumError); ok {
 		panic(NewError(http.StatusUnprocessableEntity, "参数转换失败，类型错误"))
 	}
-	panic(err)
+	log.Err.Error("参数转换失败，结构错误:", err)
+	panic(NewError(http.StatusUnprocessableEntity, "参数转换失败，结构错误"))
 }
