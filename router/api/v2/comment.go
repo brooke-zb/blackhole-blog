@@ -33,6 +33,6 @@ func CommentAdd(c *gin.Context) {
 	}
 
 	// insert
-	service.Comment.Insert(dto.ToComment(body))
+	service.Comment.Insert(dto.ToCommentModel(body))
 	c.JSON(http.StatusOK, util.RespMsg("评论成功"))
 }

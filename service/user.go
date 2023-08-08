@@ -119,9 +119,9 @@ func (userService) Update(user dto.UserUpdateDto) {
 	}
 
 	// update user
-	effects, daoErr := dao.User.Update(user.Uid, user)
+	affects, daoErr := dao.User.Update(user.Uid, user)
 	panicErrIfNotNil(daoErr, entryErrProducer(1062, userDuplicateErrProducer), entryErr(1452, "角色不存在"))
-	if effects == 0 {
+	if affects == 0 {
 		panic(util.NewError(http.StatusBadRequest, "未找到该用户或用户信息没有变化"))
 	}
 }
@@ -132,9 +132,9 @@ func (userService) Delete(id uint64) {
 	defer cache.User.Delete(cacheKey)
 
 	// delete user
-	effects, daoErr := dao.User.Delete(id)
-	panicErrIfNotNil(daoErr)
-	if effects == 0 {
+	affects, daoErr := dao.User.Delete(id)
+	panicErrIfNotNil(daoErr, entryErr(1451, "该用户下存在文章，禁止删除"))
+	if affects == 0 {
 		panic(util.NewError(http.StatusBadRequest, "未找到该用户"))
 	}
 }

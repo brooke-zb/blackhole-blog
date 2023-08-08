@@ -59,7 +59,7 @@ func ToCommentDto(comment models.Comment) CommentDto {
 	return commentDto
 }
 
-func ToComment(commentAddDto CommentAddDto) models.Comment {
+func ToCommentModel(commentAddDto CommentAddDto) models.Comment {
 	return models.Comment{
 		Aid:      commentAddDto.Aid,
 		Nickname: commentAddDto.Nickname,
