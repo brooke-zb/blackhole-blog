@@ -4,7 +4,18 @@ type ArticleClause struct {
 	PageParam
 	Category *string `form:"category"`
 	Tag      *string `form:"tag"`
-	Status   *string `form:"status"`
+	Status   *string `form:"status" binding:"omitempty,oneof=PUBLISHED DRAFT HIDDEN"`
+	Username *string `form:"username"`
+	Title    *string `form:"title"`
+	// created_at, read_count
+	SortBy *string `form:"sortBy" binding:"omitempty,oneof=created_at read_count"`
+}
+
+func (c ArticleClause) Order() string {
+	if c.SortBy == nil {
+		return "created_at"
+	}
+	return *c.SortBy
 }
 
 type CommentClause struct {
@@ -12,7 +23,7 @@ type CommentClause struct {
 	Aid                 *uint64 `form:"aid"`
 	IP                  *string `form:"ip"`
 	Nickname            *string `form:"nickname"`
-	Status              *string `form:"status"`
+	Status              *string `form:"status" binding:"omitempty,oneof=PUBLISHED REVIEW HIDDEN"`
 	OmitSensitiveFields bool    `form:"-"`
 }
 

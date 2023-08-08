@@ -24,8 +24,7 @@ func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.
 	articles.Page = clause.Page()
 	articles.Size = clause.Size()
 	tx := db.Model(&models.Article{}).Preload("Tags").Preload("Category").
-		Omit("Uid", "Content", "UpdatedAt", "Status").
-		Order("created_at desc")
+		Omit("Uid", "Content", "UpdatedAt", "Status")
 
 	// 根据分类名查询
 	if clause.Category != nil {
@@ -39,8 +38,25 @@ func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.
 			Where("TagRelation__Tag.name = ?", *clause.Tag)
 	}
 
+	// 根据用户名查询
+	if clause.Username != nil {
+		tx = tx.InnerJoins("User").
+			Where("User.username = ?", *clause.Username)
+	}
+
+	// 根据标题模糊查询
+	if clause.Title != nil {
+		tx = tx.Where("title LIKE ?", "%"+*clause.Title+"%")
+	}
+
+	// 根据文章状态查询
+	if clause.Status != nil {
+		tx = tx.Where("status = ?", *clause.Status)
+	}
+
 	err = tx.Count(&articles.Total).
 		Limit(clause.Size()).Offset((clause.Page() - 1) * clause.Size()).
+		Order(clause.Order() + " desc").
 		Find(&articles.Data).Error
 	return
 }

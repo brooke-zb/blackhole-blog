@@ -24,7 +24,7 @@ func (userDao) FindList(clause models.UserClause) (users models.Page[models.User
 
 	// 根据用户名模糊查询
 	if clause.Name != nil {
-		tx = tx.Where("name LIKE CONCAT('%', ?, '%')", *clause.Name)
+		tx = tx.Where("name LIKE ?", "%"+*clause.Name+"%")
 	}
 
 	// 根据状态查询

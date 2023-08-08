@@ -51,6 +51,7 @@ func (commentDao) FindList(clause models.CommentClause) (comments models.Page[mo
 
 	err = tx.Count(&comments.Total).
 		Limit(clause.Size()).Offset((clause.Page() - 1) * clause.Size()).
+		Order("created_at desc").
 		Find(&comments.Data).Error
 	return
 }
