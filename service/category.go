@@ -3,6 +3,7 @@ package service
 import (
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
+	"blackhole-blog/pkg/cache"
 	"blackhole-blog/pkg/dao"
 )
 
@@ -32,11 +33,17 @@ func (categoryService) Add(category dto.CategoryAddDto) {
 }
 
 func (categoryService) Update(category dto.CategoryUpdateDto) {
+	// cache
+	defer cache.Article.Clear()
+
 	daoErr := dao.Category.Update(category)
 	panicErrIfNotNil(daoErr, entryErr(1062, "分类名已存在"))
 }
 
 func (categoryService) Delete(id uint64) {
+	// cache
+	defer cache.Article.Clear()
+
 	daoErr := dao.Category.Delete(id)
 	panicErrIfNotNil(daoErr, entryErr(1451, "该分类下存在文章，禁止删除"))
 }

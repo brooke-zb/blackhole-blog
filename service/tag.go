@@ -3,6 +3,7 @@ package service
 import (
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
+	"blackhole-blog/pkg/cache"
 	"blackhole-blog/pkg/dao"
 )
 
@@ -32,11 +33,17 @@ func (tagService) Add(tag dto.TagAddDto) {
 }
 
 func (tagService) Update(tag dto.TagUpdateDto) {
+	// cache
+	defer cache.Article.Clear()
+
 	daoErr := dao.Tag.Update(tag)
 	panicErrIfNotNil(daoErr, entryErr(1062, "标签名已存在"))
 }
 
 func (tagService) DeleteBatch(ids ...uint64) int64 {
+	// cache
+	defer cache.Article.Clear()
+
 	affects, daoErr := dao.Tag.DeleteBatch(ids...)
 	panicErrIfNotNil(daoErr)
 	return affects
