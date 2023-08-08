@@ -17,6 +17,7 @@ var (
 	Comment  = commentDao{}
 	Category = categoryDao{}
 	Tag      = tagDao{}
+	Role     = roleDao{}
 )
 
 func Setup() {

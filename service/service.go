@@ -16,6 +16,7 @@ var (
 	Comment  = commentService{}
 	Category = categoryService{}
 	Tag      = tagService{}
+	Role     = roleService{}
 )
 
 type errorEntry struct {

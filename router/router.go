@@ -65,6 +65,14 @@ func InitRouter() *gin.Engine {
 			user.DELETE("/:id", admin.UserDelete) // 删除用户
 		}
 
+		role := adminGroup.Group("/role", security.RequirePermission("ROLE:FULLACCESS"))
+		{
+			role.GET("/:id", admin.RoleFindById)  // 获取角色详情
+			role.GET("", admin.RoleFindList)      // 获取角色列表
+			role.POST("", admin.RoleAdd)          // 添加角色
+			role.PUT("", admin.RoleUpdate)        // 修改角色
+			role.DELETE("/:id", admin.RoleDelete) // 删除角色
+		}
 	}
 
 	return r

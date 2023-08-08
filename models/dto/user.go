@@ -62,21 +62,12 @@ func ToUserDtoList(users models.Page[models.User]) models.Page[UserDto] {
 
 func ToUserDto(user models.User) UserDto {
 	userDto := UserDto{
-		Uid: user.Uid,
-		Role: RoleDto{
-			Rid:         user.Role.Rid,
-			Name:        user.Role.Name,
-			Permissions: make([]RolePermissionDto, len(user.Role.Permissions)),
-		},
+		Uid:     user.Uid,
+		Role:    ToRoleDto(user.Role),
 		Name:    user.Name,
 		Mail:    user.Mail,
 		Link:    user.Link,
 		Enabled: user.Enabled,
-	}
-	for i, permission := range user.Role.Permissions {
-		userDto.Role.Permissions[i] = RolePermissionDto{
-			Name: permission.Name,
-		}
 	}
 	return userDto
 }

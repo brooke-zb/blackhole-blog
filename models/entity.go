@@ -77,7 +77,7 @@ type Role struct {
 
 type RolePermission struct {
 	Rid  uint64 `gorm:"primaryKey;autoIncrement:false"`
-	Name string
+	Name string `gorm:"primaryKey"`
 }
 
 type User struct {
