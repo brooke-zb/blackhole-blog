@@ -8,6 +8,8 @@ import (
 	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
 	"fmt"
+	"net/http"
+	"strings"
 )
 
 type articleService struct{}
@@ -52,4 +54,37 @@ func (articleService) UpdateReadCount(aid uint64, incr int64) {
 
 	err := dao.Article.UpdateReadCount(aid, incr)
 	panicErrIfNotNil(err)
+}
+
+func (articleService) Add(article dto.ArticleAddDto) {
+	a := article.ToArticleModel()
+	a.Aid = util.NextId()
+	err := dao.Article.Add(a)
+	panicErrIfNotNil(err, entryErrProducer(1452, foreignKeyErrProducer))
+}
+
+func (articleService) Update(article dto.ArticleUpdateDto) {
+	err := dao.Article.Update(article)
+	panicErrIfNotNil(err, entryErrProducer(1452, foreignKeyErrProducer))
+}
+
+func foreignKeyErrProducer(msg string) string {
+	if strings.Contains(msg, "uid") {
+		return "用户不存在"
+	}
+	if strings.Contains(msg, "cid") {
+		return "分类不存在"
+	}
+	if strings.Contains(msg, "aid") {
+		return "文章不存在"
+	}
+	return setting.InternalErrorMessage
+}
+
+func (articleService) Delete(id uint64) {
+	affects, err := dao.Article.Delete(id)
+	panicErrIfNotNil(err)
+	if affects == 0 {
+		panic(util.NewError(http.StatusBadRequest, "文章不存在"))
+	}
 }

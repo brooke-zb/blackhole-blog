@@ -2,6 +2,7 @@ package dao
 
 import (
 	"blackhole-blog/models"
+	"blackhole-blog/models/dto"
 	"gorm.io/gorm"
 )
 
@@ -23,8 +24,8 @@ func (articleDao) FindById(aid uint64) (article models.Article, err error) {
 func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.Page[models.Article], err error) {
 	articles.Page = clause.Page()
 	articles.Size = clause.Size()
-	tx := db.Model(&models.Article{}).Preload("Tags").Preload("Category").
-		Omit("Uid", "Content", "UpdatedAt", "Status")
+	tx := db.Model(&models.Article{}).Preload("User").Preload("Tags").Preload("Category").
+		Omit("Content", "UpdatedAt")
 
 	// 根据分类名查询
 	if clause.Category != nil {
@@ -64,4 +65,68 @@ func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.
 func (articleDao) UpdateReadCount(aid uint64, incr int64) (err error) {
 	return db.Model(&models.Article{}).Where("aid = ?", aid).
 		Update("read_count", gorm.Expr("read_count + ?", incr)).Error
+}
+
+func (articleDao) Add(article models.Article) (err error) {
+	// 直接使用db.Create的话文章标签关系会先于文章插入，导致外键约束失败
+	// 不知道是使用不规范还是gorm的bug，总之这里自行处理多对多插入
+	return db.Transaction(func(tx *gorm.DB) error {
+		// 插入文章
+		if err := tx.Omit("Tags").Create(&article).Error; err != nil {
+			return err
+		}
+
+		if len(article.Tags) > 0 {
+			// 创建标签
+			if err := tx.Save(&article.Tags).Error; err != nil {
+				return err
+			}
+
+			// 插入标签关系
+			tagNames := make([]string, len(article.Tags))
+			for i, tag := range article.Tags {
+				tagNames[i] = tag.Name
+			}
+			if err := tx.Exec("INSERT INTO bh_tag_relation(aid, tid) select ?, tid FROM bh_tag WHERE name in ?", article.Aid, tagNames).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
+func (articleDao) Update(article dto.ArticleUpdateDto) error {
+	return db.Transaction(func(tx *gorm.DB) error {
+		// 更新文章
+		if err := tx.Model(&models.Article{}).Where("aid = ?", article.Aid).Updates(article).Error; err != nil {
+			return err
+		}
+
+		// 删除原有标签关系
+		if err := tx.Where("aid = ?", article.Aid).Delete(&models.TagRelation{}).Error; err != nil {
+			return err
+		}
+
+		if len(article.Tags) > 0 {
+			// 创建标签
+			if err := tx.Save(article.TagsModel()).Error; err != nil {
+				return err
+			}
+
+			// 插入标签关系
+			tagNames := make([]string, len(article.Tags))
+			for i, tag := range article.Tags {
+				tagNames[i] = tag.Name
+			}
+			if err := tx.Exec("INSERT INTO bh_tag_relation(aid, tid) select ?, tid FROM bh_tag WHERE name in ?", article.Aid, tagNames).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
+func (articleDao) Delete(aid uint64) (int64, error) {
+	tx := db.Where("aid = ?", aid).Delete(&models.Article{})
+	return tx.RowsAffected, tx.Error
 }

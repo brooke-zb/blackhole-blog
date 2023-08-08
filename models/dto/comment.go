@@ -22,8 +22,8 @@ type CommentDto struct {
 
 type CommentAddDto struct {
 	Aid      uint64  `json:"aid" binding:"required"`
-	Nickname string  `json:"nickname" binding:"required"`
-	Content  string  `json:"content" binding:"required"`
+	Nickname string  `json:"nickname" binding:"required,min=2,max=32"`
+	Content  string  `json:"content" binding:"required,max=1024"`
 	ReplyId  *uint64 `json:"replyId"`
 	Uid      *uint64 `json:"-"`
 	Ip       string  `json:"-"`

@@ -21,6 +21,7 @@ type ArticleDto struct {
 
 type ArticlePreviewDto struct {
 	Aid       uint64             `json:"aid"`
+	User      ArticleUserDto     `json:"user"`
 	Category  ArticleCategoryDto `json:"category"`
 	Tags      []ArticleTagDto    `json:"tags"`
 	Title     string             `json:"title"`
@@ -29,13 +30,68 @@ type ArticlePreviewDto struct {
 	ReadCount int                `json:"readCount"`
 }
 
+type ArticleUserDto struct {
+	Uid  uint64 `json:"uid"`
+	Name string `json:"name"`
+}
+
 type ArticleCategoryDto struct {
 	Cid  uint64 `json:"cid"`
 	Name string `json:"name"`
 }
 
 type ArticleTagDto struct {
-	Name string `json:"name"`
+	Name string `json:"name" binding:"required"`
+}
+
+type ArticleAddDto struct {
+	Uid         uint64          `json:"-"`
+	Cid         uint64          `json:"cid" binding:"required"`
+	Tags        []ArticleTagDto `json:"tags" binding:"required"`
+	Title       string          `json:"title" binding:"required,max=64"`
+	Content     string          `json:"content" binding:"required"`
+	Commentable bool            `json:"commentable" binding:"required"`
+	Status      string          `json:"status" binding:"required,oneof=PUBLISHED DRAFT HIDDEN"`
+}
+
+func (a ArticleAddDto) ToArticleModel() models.Article {
+	article := models.Article{
+		Uid:         a.Uid,
+		Cid:         a.Cid,
+		Title:       a.Title,
+		Tags:        make([]models.Tag, len(a.Tags)),
+		Content:     a.Content,
+		Commentable: a.Commentable,
+		Status:      a.Status,
+	}
+	for i, tag := range a.Tags {
+		article.Tags[i] = models.Tag{
+			Name: tag.Name,
+		}
+	}
+	return article
+}
+
+type ArticleUpdateDto struct {
+	Aid         uint64          `json:"aid" binding:"required" gorm:"-"`
+	Cid         uint64          `json:"cid" binding:"required"`
+	Tags        []ArticleTagDto `json:"tags" binding:"required" gorm:"-"`
+	Title       string          `json:"title" binding:"required,max=64"`
+	Content     string          `json:"content" binding:"required"`
+	Commentable bool            `json:"commentable" binding:"required"`
+	Status      string          `json:"status" binding:"required,oneof=PUBLISHED DRAFT HIDDEN"`
+	CreatedAt   time.Time       `json:"createdAt" binding:"required"`
+	UpdatedAt   *time.Time      `json:"updatedAt"`
+}
+
+func (a ArticleUpdateDto) TagsModel() []models.Tag {
+	tags := make([]models.Tag, len(a.Tags))
+	for i, tag := range a.Tags {
+		tags[i] = models.Tag{
+			Name: tag.Name,
+		}
+	}
+	return tags
 }
 
 func ToArticleDto(article models.Article) ArticleDto {
@@ -73,6 +129,10 @@ func ToArticlePreviewDtoList(articles models.Page[models.Article]) models.Page[A
 	for i, article := range articles.Data {
 		articleListDto.Data[i] = ArticlePreviewDto{
 			Aid: article.Aid,
+			User: ArticleUserDto{
+				Uid:  article.User.Uid,
+				Name: article.User.Name,
+			},
 			Category: ArticleCategoryDto{
 				Cid:  article.Category.Cid,
 				Name: article.Category.Name,

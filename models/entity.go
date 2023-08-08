@@ -15,7 +15,7 @@ type Article struct {
 	Commentable bool
 	Comments    []Comment `gorm:"foreignKey:Aid;references:Aid"`
 	CreatedAt   time.Time
-	UpdatedAt   *time.Time
+	UpdatedAt   *time.Time `gorm:"autoUpdateTime:false"`
 	// PUBLISHED, DRAFT or HIDDEN
 	Status    string
 	ReadCount int
