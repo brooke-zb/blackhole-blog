@@ -82,6 +82,15 @@ func InitRouter() *gin.Engine {
 			category.PUT("", admin.CategoryUpdate)        // 修改分类
 			category.DELETE("/:id", admin.CategoryDelete) // 删除分类
 		}
+
+		tag := adminGroup.Group("/tag", security.RequirePermission("TAG:FULLACCESS"))
+		{
+			tag.GET("/:id", admin.TagFindById)        // 获取标签详情
+			tag.GET("", admin.TagFindList)            // 获取标签列表
+			tag.POST("", admin.TagAdd)                // 添加标签
+			tag.PUT("", admin.TagUpdate)              // 修改标签
+			tag.DELETE("/*ids", admin.TagDeleteBatch) // 批量删除标签
+		}
 	}
 
 	return r

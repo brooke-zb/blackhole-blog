@@ -38,7 +38,7 @@ type Tag struct {
 	Tid          uint64 `gorm:"primaryKey"`
 	Name         string
 	Articles     []Article `gorm:"many2many:tagRelation;joinForeignKey:Tid;joinReferences:Aid"`
-	ArticleCount int
+	ArticleCount int       `gorm:"<-:false"`
 }
 
 type TagRelation struct {
