@@ -13,6 +13,6 @@ func RouterLog() gin.HandlerFunc {
 		if c.GetBool(setting.RecoveryAbortKey) {
 			msg = "abort"
 		}
-		log.Api.Infow(msg, "status", c.Writer.Status(), "method", c.Request.Method, "path", c.Request.URL.Path, "query", c.Request.URL.RawQuery, "ip", c.ClientIP())
+		log.Api.Infow(msg, "status", c.Writer.Status(), "method", c.Request.Method, "path", c.Request.URL.Path, "query", c.Request.URL.Query(), "ip", c.ClientIP())
 	}
 }
