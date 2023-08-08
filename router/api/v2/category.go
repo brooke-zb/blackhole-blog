@@ -8,5 +8,5 @@ import (
 )
 
 func CategoryFindList(c *gin.Context) {
-	c.JSON(http.StatusOK, util.RespOK(service.Category.FindList()))
+	c.JSON(http.StatusOK, util.RespOK(service.Category.FindListWithArticleCount()))
 }

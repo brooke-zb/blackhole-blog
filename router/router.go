@@ -73,6 +73,15 @@ func InitRouter() *gin.Engine {
 			role.PUT("", admin.RoleUpdate)        // 修改角色
 			role.DELETE("/:id", admin.RoleDelete) // 删除角色
 		}
+
+		category := adminGroup.Group("/category", security.RequirePermission("CATEGORY:FULLACCESS"))
+		{
+			category.GET("/:id", admin.CategoryFindById)  // 获取分类详情
+			category.GET("", admin.CategoryFindList)      // 获取分类列表
+			category.POST("", admin.CategoryAdd)          // 添加分类
+			category.PUT("", admin.CategoryUpdate)        // 修改分类
+			category.DELETE("/:id", admin.CategoryDelete) // 删除分类
+		}
 	}
 
 	return r

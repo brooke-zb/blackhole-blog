@@ -31,7 +31,7 @@ type Category struct {
 	Cid          uint64 `gorm:"primaryKey"`
 	Name         string
 	Articles     []Article `gorm:"foreignKey:Cid;references:Cid"`
-	ArticleCount int
+	ArticleCount int       `gorm:"<-:false"`
 }
 
 type Tag struct {
