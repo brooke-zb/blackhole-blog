@@ -9,12 +9,14 @@ type articleDao struct{}
 
 func (articleDao) VerifyExist(aid uint64) (exist bool, err error) {
 	var count int64
-	err = db.Model(&models.Article{}).Where("aid = ?", aid).Count(&count).Error
+	err = db.Model(&models.Article{}).Where("aid = ?", aid).
+		Count(&count).Error
 	return count > 0, err
 }
 
 func (articleDao) FindById(aid uint64) (article models.Article, err error) {
-	err = db.Model(&models.Article{}).Preload("Tags").Preload("Category").Take(&article, aid).Error
+	err = db.Model(&models.Article{}).Preload("Tags").Preload("Category").
+		Take(&article, aid).Error
 	return
 }
 
@@ -44,6 +46,6 @@ func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.
 }
 
 func (articleDao) UpdateReadCount(aid uint64, incr int64) (err error) {
-	err = db.Model(&models.Article{}).Where("aid = ?", aid).Update("read_count", gorm.Expr("read_count + ?", incr)).Error
-	return
+	return db.Model(&models.Article{}).Where("aid = ?", aid).
+		Update("read_count", gorm.Expr("read_count + ?", incr)).Error
 }

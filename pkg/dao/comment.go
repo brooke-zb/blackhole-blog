@@ -5,7 +5,7 @@ import "blackhole-blog/models"
 type commentDao struct{}
 
 func (commentDao) FindById(coid uint64) (comment models.Comment, err error) {
-	err = db.Model(&models.Comment{}).Take(&comment, coid).Error
+	err = db.Take(&comment, coid).Error
 	return
 }
 

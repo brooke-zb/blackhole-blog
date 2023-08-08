@@ -39,20 +39,22 @@ func (userDao) FindList(clause models.UserClause) (users models.Page[models.User
 }
 
 func (userDao) UpdateInfo(uid uint64, updateInfoBody dto.UserUpdateInfoDto) error {
-	return db.Model(&models.User{}).Where("uid = ?", uid).Updates(updateInfoBody).Error
+	return db.Model(&models.User{}).Where("uid = ?", uid).
+		Updates(updateInfoBody).Error
 }
 
 func (userDao) UpdatePassword(uid uint64, hashedPassword string) error {
-	return db.Model(&models.User{}).Where("uid = ?", uid).Update("password", hashedPassword).Error
+	return db.Model(&models.User{}).Where("uid = ?", uid).
+		Update("password", hashedPassword).Error
 }
 
 func (userDao) Add(user models.User) error {
 	return db.Create(&user).Error
 }
 
-func (userDao) Update(uid uint64, user dto.UserUpdateDto) (int64, error) {
-	tx := db.Model(&models.User{}).Where("uid = ?", uid).Updates(user)
-	return tx.RowsAffected, tx.Error
+func (userDao) Update(uid uint64, user dto.UserUpdateDto) error {
+	return db.Model(&models.User{}).Where("uid = ?", uid).
+		Updates(user).Error
 }
 
 func (userDao) Delete(uid uint64) (int64, error) {

@@ -24,8 +24,8 @@ func (categoryDao) FindList(page, size int) (categories models.Page[models.Categ
 
 func (categoryDao) FindListWithArticleCount() (categories []models.Category, err error) {
 	// gorm丑陋的写法之一
-	err = db.Model(&models.Category{}).Joins("left join bh_article on bh_category.cid = bh_article.cid").
-		Select("bh_category.cid, bh_category.name, COUNT(*) as ArticleCount").
+	err = db.Joins("LEFT JOIN bh_article ON bh_category.cid = bh_article.cid").
+		Select("bh_category.cid, bh_category.name, COUNT(*) AS ArticleCount").
 		Group("cid").Find(&categories).Error
 	return
 }
@@ -34,9 +34,9 @@ func (categoryDao) Add(category dto.CategoryAddDto) error {
 	return db.Create(&models.Category{Name: category.Name}).Error
 }
 
-func (categoryDao) Update(category dto.CategoryUpdateDto) (int64, error) {
-	tx := db.Model(&models.Category{}).Where("cid = ?", category.Cid).Update("name", category.Name)
-	return tx.RowsAffected, tx.Error
+func (categoryDao) Update(category dto.CategoryUpdateDto) error {
+	return db.Model(&models.Category{}).Where("cid = ?", category.Cid).
+		Update("name", category.Name).Error
 }
 
 func (categoryDao) Delete(cid uint64) error {

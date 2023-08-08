@@ -4,8 +4,6 @@ import (
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/dao"
-	"blackhole-blog/pkg/util"
-	"net/http"
 )
 
 type categoryService struct{}
@@ -34,11 +32,8 @@ func (categoryService) Add(category dto.CategoryAddDto) {
 }
 
 func (categoryService) Update(category dto.CategoryUpdateDto) {
-	affects, daoErr := dao.Category.Update(category)
+	daoErr := dao.Category.Update(category)
 	panicErrIfNotNil(daoErr, entryErr(1062, "分类名已存在"))
-	if affects == 0 {
-		panic(util.NewError(http.StatusBadRequest, "未找到该分类"))
-	}
 }
 
 func (categoryService) Delete(id uint64) {
