@@ -4,6 +4,7 @@ type ArticleClause struct {
 	PageParam
 	Category *string `form:"category"`
 	Tag      *string `form:"tag"`
+	Status   *string `form:"status"`
 }
 
 type CommentClause struct {

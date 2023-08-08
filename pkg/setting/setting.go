@@ -73,6 +73,15 @@ const (
 	InternalErrorMessage   = "内部错误，请联系管理员"
 )
 
+var (
+	StatusArticlePublished = "PUBLISHED"
+	StatusArticleDraft     = "DRAFT"
+	StatusArticleHidden    = "HIDDEN"
+	StatusCommentPublished = "PUBLISHED"
+	StatusCommentReview    = "REVIEW"
+	StatusCommentHidden    = "HIDDEN"
+)
+
 func readConfigPath() (path string) {
 	// flag
 	flag.StringVar(&path, "config-path", "", "choose config file path.")

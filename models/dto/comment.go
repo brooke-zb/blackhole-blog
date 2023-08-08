@@ -8,8 +8,10 @@ import (
 type CommentDto struct {
 	Coid      uint64       `json:"coid"`
 	Nickname  string       `json:"nickname"`
+	Email     *string      `json:"email,omitempty"`
 	Avatar    *string      `json:"avatar"`
 	Site      *string      `json:"site"`
+	Ip        string       `json:"ip,omitempty"`
 	Content   string       `json:"content"`
 	CreatedAt time.Time    `json:"createdAt"`
 	Children  []CommentDto `json:"children"`
@@ -44,8 +46,10 @@ func ToCommentDto(comment models.Comment) CommentDto {
 	commentDto := CommentDto{
 		Coid:      comment.Coid,
 		Nickname:  comment.Nickname,
+		Email:     comment.Email,
 		Avatar:    comment.Avatar,
 		Site:      comment.Site,
+		Ip:        comment.Ip,
 		Content:   comment.Content,
 		CreatedAt: comment.CreatedAt,
 		Children:  make([]CommentDto, len(comment.Children)),

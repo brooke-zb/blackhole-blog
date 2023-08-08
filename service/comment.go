@@ -4,29 +4,17 @@ import (
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/dao"
+	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
 	"errors"
 	"gorm.io/gorm"
 	"net/http"
 )
 
-var (
-	statusPublished = "PUBLISHED"
-	statusReview    = "REVIEW"
-	statusHidden    = "HIDDEN"
-)
-
 type commentService struct{}
 
-func (commentService) FindListByArticleId(articleId uint64, page int, size int) (res models.Page[dto.CommentDto]) {
-	comments, daoErr := dao.Comment.FindList(models.CommentClause{
-		Aid:    &articleId,
-		Status: &statusPublished,
-		PageParam: models.PageParam{
-			PageVal: page,
-			SizeVal: size,
-		},
-	})
+func (commentService) FindList(clause models.CommentClause) (res models.Page[dto.CommentDto]) {
+	comments, daoErr := dao.Comment.FindList(clause)
 	panicErrIfNotNil(daoErr)
 	return dto.ToCommentDtoList(comments)
 }
@@ -44,7 +32,9 @@ func (commentService) Insert(comment models.Comment) {
 		reply, daoErr := dao.Comment.FindById(*comment.ReplyId)
 
 		// 评论不存在 或者 评论非审核通过 或者 文章id不匹配
-		if errors.Is(daoErr, gorm.ErrRecordNotFound) || reply.Status != statusPublished || reply.Aid != comment.Aid {
+		if errors.Is(daoErr, gorm.ErrRecordNotFound) ||
+			reply.Status != setting.StatusCommentPublished ||
+			reply.Aid != comment.Aid {
 			panic(util.NewError(http.StatusBadRequest, "回复的评论不存在"))
 		}
 
@@ -60,14 +50,14 @@ func (commentService) Insert(comment models.Comment) {
 	}
 
 	// 检查评论者是否受信任
-	comment.Status = statusPublished
+	comment.Status = setting.StatusCommentPublished
 	if comment.Uid == nil {
 		match, _ := util.WordsFilter.FindIn(comment.Content)
 		if !match {
 			match, _ = util.WordsFilter.FindIn(comment.Nickname)
 		}
 		if match {
-			comment.Status = statusReview
+			comment.Status = setting.StatusCommentReview
 		}
 	}
 

@@ -15,6 +15,7 @@ type ArticleDto struct {
 	Commentable bool               `json:"commentable"`
 	CreatedAt   time.Time          `json:"createdAt"`
 	UpdatedAt   *time.Time         `json:"UpdatedAt"`
+	Status      string             `json:"status"`
 	ReadCount   int                `json:"readCount"`
 }
 
@@ -24,6 +25,7 @@ type ArticlePreviewDto struct {
 	Tags      []ArticleTagDto    `json:"tags"`
 	Title     string             `json:"title"`
 	CreatedAt time.Time          `json:"createdAt"`
+	Status    string             `json:"status"`
 	ReadCount int                `json:"readCount"`
 }
 
@@ -50,6 +52,7 @@ func ToArticleDto(article models.Article) ArticleDto {
 		Commentable: article.Commentable,
 		CreatedAt:   article.CreatedAt,
 		UpdatedAt:   article.UpdatedAt,
+		Status:      article.Status,
 		ReadCount:   article.ReadCount,
 	}
 	for i, tag := range article.Tags {
@@ -77,6 +80,7 @@ func ToArticlePreviewDtoList(articles models.Page[models.Article]) models.Page[A
 			Tags:      make([]ArticleTagDto, len(article.Tags)),
 			Title:     article.Title,
 			CreatedAt: article.CreatedAt,
+			Status:    article.Status,
 			ReadCount: article.ReadCount,
 		}
 		for j, tag := range article.Tags {
