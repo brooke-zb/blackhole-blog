@@ -4,10 +4,11 @@ import (
 	"blackhole-blog/middleware/auth"
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
-	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/service"
+	"errors"
 	"github.com/gin-gonic/gin"
+	"mime/multipart"
 	"net/http"
 )
 
@@ -45,8 +46,10 @@ func ArticleUploadAttachment(c *gin.Context) {
 	// bindings
 	attachment, err := c.FormFile("file")
 	if err != nil {
-		log.Err.Error(err.Error())
-		panic(util.NewError(http.StatusBadRequest, "出现未知错误，上传失败"))
+		if errors.Is(err, multipart.ErrMessageTooLarge) {
+			panic(util.NewError(http.StatusBadRequest, "上传文件过大(>32MB)"))
+		}
+		panic(err)
 	}
 
 	// upload attachment
