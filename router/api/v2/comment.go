@@ -24,21 +24,22 @@ func CommentFindListByArticleId(c *gin.Context) {
 		PageParam:           page,
 		Status:              &setting.StatusCommentPublished,
 		OmitSensitiveFields: true,
+		SelectChildren:      true,
 	})
 	c.JSON(http.StatusOK, util.RespOK(comments))
 }
 
 func CommentAdd(c *gin.Context) {
 	// bindings
-	body := dto.CommentAddDto{}
-	util.BindJSON(c, &body)
-	body.Ip = c.ClientIP()
+	comment := dto.CommentAddDto{}
+	util.BindJSON(c, &comment)
+	comment.Ip = c.ClientIP()
 	user, exist := auth.ShouldGetUser(c)
 	if exist {
-		body.Uid = &user.Uid
+		comment.Uid = &user.Uid
 	}
 
 	// insert
-	service.Comment.Insert(dto.ToCommentModel(body))
+	service.Comment.Insert(comment)
 	c.JSON(http.StatusOK, util.RespMsg("评论成功"))
 }

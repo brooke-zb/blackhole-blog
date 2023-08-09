@@ -26,7 +26,16 @@ type CommentAddDto struct {
 	Content  string  `json:"content" binding:"required,max=1024"`
 	ReplyId  *uint64 `json:"replyId"`
 	Uid      *uint64 `json:"-"`
+	Site     *string `json:"site" binding:"omitempty,max=200,url"`
 	Ip       string  `json:"-"`
+}
+
+type CommentUpdateDto struct {
+	Coid     uint64  `json:"coid" binding:"required" gorm:"-"`
+	Nickname string  `json:"nickname" binding:"required,min=2,max=32"`
+	Content  string  `json:"content" binding:"required,max=1024"`
+	Site     *string `json:"site" binding:"omitempty,max=200,startswith=http://|startswith=https://,url"`
+	Status   string  `json:"status" binding:"required,oneof=PUBLISHED REVIEW HIDDEN"`
 }
 
 func ToCommentDtoList(comments models.Page[models.Comment]) (res models.Page[CommentDto]) {
@@ -63,13 +72,14 @@ func ToCommentDto(comment models.Comment) CommentDto {
 	return commentDto
 }
 
-func ToCommentModel(commentAddDto CommentAddDto) models.Comment {
+func (c CommentAddDto) ToCommentModel() models.Comment {
 	return models.Comment{
-		Aid:      commentAddDto.Aid,
-		Nickname: commentAddDto.Nickname,
-		Content:  commentAddDto.Content,
-		ReplyId:  commentAddDto.ReplyId,
-		Uid:      commentAddDto.Uid,
-		Ip:       commentAddDto.Ip,
+		Aid:      c.Aid,
+		Nickname: c.Nickname,
+		Content:  c.Content,
+		Site:     c.Site,
+		ReplyId:  c.ReplyId,
+		Uid:      c.Uid,
+		Ip:       c.Ip,
 	}
 }

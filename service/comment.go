@@ -13,13 +13,21 @@ import (
 
 type commentService struct{}
 
+func (commentService) FindById(id uint64) dto.CommentDto {
+	comment, daoErr := dao.Comment.FindById(id)
+	panicSelectErrIfNotNil(daoErr, "未找到该评论")
+	return dto.ToCommentDto(comment)
+}
+
 func (commentService) FindList(clause models.CommentClause) (res models.Page[dto.CommentDto]) {
 	comments, daoErr := dao.Comment.FindList(clause)
 	panicErrIfNotNil(daoErr)
 	return dto.ToCommentDtoList(comments)
 }
 
-func (commentService) Insert(comment models.Comment) {
+func (commentService) Insert(commentAddDto dto.CommentAddDto) {
+	comment := commentAddDto.ToCommentModel()
+
 	// 查询文章是否存在
 	exist, daoErr := dao.Article.VerifyExist(comment.Aid)
 	panicErrIfNotNil(daoErr)
@@ -66,4 +74,15 @@ func (commentService) Insert(comment models.Comment) {
 
 	err := dao.Comment.Insert(comment)
 	panicErrIfNotNil(err)
+}
+
+func (commentService) Update(comment dto.CommentUpdateDto) {
+	daoErr := dao.Comment.Update(comment)
+	panicErrIfNotNil(daoErr)
+}
+
+func (commentService) DeleteBatch(ids ...uint64) int64 {
+	affects, daoErr := dao.Comment.DeleteBatch(ids...)
+	panicErrIfNotNil(daoErr)
+	return affects
 }

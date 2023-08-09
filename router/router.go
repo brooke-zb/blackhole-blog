@@ -100,6 +100,14 @@ func InitRouter() *gin.Engine {
 			article.PUT("", admin.ArticleUpdate)        // 修改文章
 			article.DELETE("/:id", admin.ArticleDelete) // 删除文章
 		}
+
+		comment := adminGroup.Group("/comment", security.RequirePermission("COMMENT:FULLACCESS"))
+		{
+			comment.GET("/:id", admin.CommentFindById)        // 获取评论详情
+			comment.GET("", admin.CommentFindList)            // 获取评论列表
+			comment.PUT("", admin.CommentUpdate)              // 修改评论
+			comment.DELETE("/*ids", admin.CommentDeleteBatch) // 删除评论
+		}
 	}
 
 	return r
