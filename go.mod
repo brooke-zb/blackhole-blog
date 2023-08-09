@@ -16,6 +16,7 @@ require (
 	github.com/karlseguin/ccache/v3 v3.0.3
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/spf13/viper v1.16.0
+	github.com/wneessen/go-mail v0.4.0
 	github.com/yitter/idgenerator-go v1.3.3
 	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.11.0

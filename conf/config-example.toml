@@ -45,6 +45,21 @@ access-key-secret = 'SecretKey'
 bucket-name = 'my-oss-bucket'
 save-folder = '/path/to/save/folder'
 
+[mail]
+host = 'smtp.example.com'
+port = 465
+username = 'username'
+password = 'password'
+from = 'Example<noreply@example.com>'
+
+[mail.template]
+path = './conf/mail_template.html'
+reply-subject = 'Reply Notification'
+review-subject = 'Review Notification'
+reply-url-format = 'https://example.com/articles/%d'
+review-url = 'https://example.com/admin/comments'
+admin-email = 'admin@example.com'
+
 [words-filter]
 words-path = '/path/to/words.txt'
 

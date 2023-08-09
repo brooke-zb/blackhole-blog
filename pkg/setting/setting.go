@@ -56,6 +56,21 @@ type config struct {
 		BucketName      string `mapstructure:"bucket-name"`
 		SaveFolder      string `mapstructure:"save-folder"`
 	} `mapstructure:"oss"`
+	Mail struct {
+		Host     string `mapstructure:"host"`
+		Port     int    `mapstructure:"port"`
+		Username string `mapstructure:"username"`
+		Password string `mapstructure:"password"`
+		From     string `mapstructure:"from"`
+		Template struct {
+			Path           string `mapstructure:"path"`
+			ReplySubject   string `mapstructure:"reply-subject"`
+			ReviewSubject  string `mapstructure:"review-subject"`
+			ReplyURLFormat string `mapstructure:"reply-url-format"`
+			ReviewURL      string `mapstructure:"review-url"`
+			AdminEmail     string `mapstructure:"admin-email"`
+		} `mapstructure:"template"`
+	} `mapstructure:"mail"`
 	Log struct {
 		Default LogConfig `mapstructure:"default"`
 		Api     LogConfig `mapstructure:"api"`

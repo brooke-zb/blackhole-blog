@@ -1,0 +1,22 @@
+<html lang="zh-cn">
+<body>
+<meta charset="UTF-8">
+<div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap;">
+    <div style="width: 600px; height: 420px; background: linear-gradient(30deg, #5f27d2, #a141e3); color: #ccc; border-radius: 10px; box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3); padding: 10px 25px; display: flex; flex-direction: column">
+        <div style="flex-grow: 1; word-wrap:break-word; word-break:break-all">
+            <div style="font-size: 24px; text-align: center; margin: 36px 0; font-weight: bold; color: white">{{.Subject}}</div>
+            <p>
+                {{if .IsReplyMail}}
+                <strong style="color: white">{{.Nickname}}</strong> 回复了你，
+                {{else}}
+                <strong style="color: white">{{.Nickname}}</strong> 回复了你，内容未能通过敏感词检查，
+                {{end}}
+                <a href="{{.URL}}" style="color: white; text-decoration: underline">点此链接查看</a>
+            </p>
+
+        </div>
+        <div style="font-size: 14px; text-align: center; padding-top: 10px; margin-top: 20px; color: #ccc; border-top: 1px solid #ccc">此邮件由灵感空间站自动发送，请勿回复此邮件。若有疑问，可向<a href="mailto:me@brookezb.com" style="color: white; text-decoration: underline">管理员</a>发送邮件。</div>
+    </div>
+</div>
+</body>
+</html>

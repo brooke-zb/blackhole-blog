@@ -69,6 +69,14 @@ func (commentService) Insert(commentAddDto dto.CommentAddDto) {
 		}
 	}
 
+	// 异步发送通知邮件
+	switch comment.Status {
+	case setting.StatusCommentPublished:
+		go util.SendReplyMail(comment.Aid, comment.Nickname)
+	case setting.StatusCommentReview:
+		go util.SendReviewMail(comment.Nickname)
+	}
+
 	// 生成评论id
 	comment.Coid = util.NextId()
 
