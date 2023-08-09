@@ -15,7 +15,7 @@ type commentService struct{}
 
 func (commentService) FindById(id uint64) dto.CommentDto {
 	comment, daoErr := dao.Comment.FindById(id)
-	panicSelectErrIfNotNil(daoErr, "未找到该评论")
+	panicNotFoundErrIfNotNil(daoErr, "未找到该评论")
 	return dto.ToCommentDto(comment)
 }
 
@@ -78,7 +78,7 @@ func (commentService) Insert(commentAddDto dto.CommentAddDto) {
 
 func (commentService) Update(comment dto.CommentUpdateDto) {
 	daoErr := dao.Comment.Update(comment)
-	panicErrIfNotNil(daoErr)
+	panicNotFoundErrIfNotNil(daoErr, "未找到该评论")
 }
 
 func (commentService) DeleteBatch(ids ...uint64) int64 {

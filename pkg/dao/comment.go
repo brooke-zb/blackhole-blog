@@ -67,6 +67,13 @@ func (commentDao) Insert(comment models.Comment) error {
 }
 
 func (commentDao) Update(comment dto.CommentUpdateDto) error {
+	var count int64
+	if err := db.Model(&models.Comment{}).Where("coid = ?", comment.Coid).Count(&count).Error; err != nil {
+		return err
+	}
+	if count == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return db.Model(&models.Comment{}).Where("coid = ?", comment.Coid).
 		Updates(comment).Error
 }

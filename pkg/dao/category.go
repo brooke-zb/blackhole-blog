@@ -3,6 +3,7 @@ package dao
 import (
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
+	"gorm.io/gorm"
 )
 
 type categoryDao struct{}
@@ -35,6 +36,13 @@ func (categoryDao) Add(category dto.CategoryAddDto) error {
 }
 
 func (categoryDao) Update(category dto.CategoryUpdateDto) error {
+	var count int64
+	if err := db.Model(&models.Category{}).Where("cid = ?", category.Cid).Count(&count).Error; err != nil {
+		return err
+	}
+	if count == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return db.Model(&models.Category{}).Where("cid = ?", category.Cid).
 		Update("name", category.Name).Error
 }

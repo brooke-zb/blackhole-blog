@@ -3,6 +3,7 @@ package dao
 import (
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
+	"gorm.io/gorm"
 )
 
 type userDao struct{}
@@ -53,6 +54,13 @@ func (userDao) Add(user models.User) error {
 }
 
 func (userDao) Update(uid uint64, user dto.UserUpdateDto) error {
+	var count int64
+	if err := db.Model(&models.User{}).Where("uid = ?", user.Uid).Count(&count).Error; err != nil {
+		return err
+	}
+	if count == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return db.Model(&models.User{}).Where("uid = ?", uid).
 		Updates(user).Error
 }

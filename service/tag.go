@@ -11,7 +11,7 @@ type tagService struct{}
 
 func (tagService) FindById(id uint64) dto.TagDto {
 	tag, daoErr := dao.Tag.FindById(id)
-	panicSelectErrIfNotNil(daoErr, "标签不存在")
+	panicNotFoundErrIfNotNil(daoErr, "未找到该标签")
 	return dto.ToTagDto(tag)
 }
 
@@ -37,7 +37,7 @@ func (tagService) Update(tag dto.TagUpdateDto) {
 	defer cache.Article.Clear()
 
 	daoErr := dao.Tag.Update(tag)
-	panicErrIfNotNil(daoErr, entryErr(1062, "标签名已存在"))
+	panicNotFoundErrIfNotNil(daoErr, "未找到该标签", entryErr(1062, "标签名已存在"))
 }
 
 func (tagService) DeleteBatch(ids ...uint64) int64 {

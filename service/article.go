@@ -24,7 +24,7 @@ func (articleService) FindById(id uint64) (res dto.ArticleDto) {
 	defer cache.DeferredSetWithRevocer(cache.Article, cacheKey, &res)()
 
 	article, daoErr := dao.Article.FindById(id)
-	panicSelectErrIfNotNil(daoErr, "未找到该文章")
+	panicNotFoundErrIfNotNil(daoErr, "未找到该文章")
 	return dto.ToArticleDto(article)
 }
 
@@ -65,18 +65,18 @@ func (articleService) Add(article dto.ArticleAddDto) {
 
 func (articleService) Update(article dto.ArticleUpdateDto) {
 	err := dao.Article.Update(article)
-	panicErrIfNotNil(err, entryErrProducer(1452, foreignKeyErrProducer))
+	panicNotFoundErrIfNotNil(err, "未找到该文章", entryErrProducer(1452, foreignKeyErrProducer))
 }
 
 func foreignKeyErrProducer(msg string) string {
 	if strings.Contains(msg, "uid") {
-		return "用户不存在"
+		return "未找到该用户"
 	}
 	if strings.Contains(msg, "cid") {
-		return "分类不存在"
+		return "未找到该分类"
 	}
 	if strings.Contains(msg, "aid") {
-		return "文章不存在"
+		return "未找到该文章"
 	}
 	return setting.InternalErrorMessage
 }
@@ -85,6 +85,6 @@ func (articleService) Delete(id uint64) {
 	affects, err := dao.Article.Delete(id)
 	panicErrIfNotNil(err)
 	if affects == 0 {
-		panic(util.NewError(http.StatusBadRequest, "文章不存在"))
+		panic(util.NewError(http.StatusBadRequest, "未找到该文章"))
 	}
 }

@@ -96,6 +96,13 @@ func (articleDao) Add(article models.Article) (err error) {
 }
 
 func (articleDao) Update(article dto.ArticleUpdateDto) error {
+	var count int64
+	if err := db.Model(&models.Article{}).Where("aid = ?", article.Aid).Count(&count).Error; err != nil {
+		return err
+	}
+	if count == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	return db.Transaction(func(tx *gorm.DB) error {
 		// 更新文章
 		if err := tx.Model(&models.Article{}).Where("aid = ?", article.Aid).Updates(article).Error; err != nil {

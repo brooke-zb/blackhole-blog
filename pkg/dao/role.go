@@ -28,6 +28,13 @@ func (roleDao) Add(role models.Role) error {
 }
 
 func (roleDao) Update(role dto.RoleUpdateDto) error {
+	var count int64
+	if err := db.Model(&models.Role{}).Where("rid = ?", role.Rid).Count(&count).Error; err != nil {
+		return err
+	}
+	if count == 0 {
+		return gorm.ErrRecordNotFound
+	}
 	err := db.Transaction(func(tx *gorm.DB) error {
 		if role.Name != nil {
 			if err := tx.Model(&models.Role{}).Where("rid = ?", role.Rid).

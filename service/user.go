@@ -31,13 +31,13 @@ func (userService) FindById(id uint64) (res dto.UserDto) {
 	defer cache.DeferredSetWithRevocer(cache.User, cacheKey, &res)()
 
 	user, daoErr := dao.User.FindById(id)
-	panicSelectErrIfNotNil(daoErr, "未找到该用户")
+	panicNotFoundErrIfNotNil(daoErr, "未找到该用户")
 	return dto.ToUserDto(user)
 }
 
 func (userService) CheckUser(username string, password string) uint64 {
 	user, daoErr := dao.User.FindByName(username)
-	panicSelectErrIfNotNil(daoErr, "未找到该用户")
+	panicNotFoundErrIfNotNil(daoErr, "未找到该用户")
 
 	// check password
 	hashErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
@@ -80,7 +80,7 @@ func (userService) UpdatePassword(id uint64, updatePasswordBody dto.UserUpdatePa
 
 	// check password
 	user, daoErr := dao.User.FindById(id)
-	panicSelectErrIfNotNil(daoErr, "未找到该用户")
+	panicNotFoundErrIfNotNil(daoErr, "未找到该用户")
 	hashErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(updatePasswordBody.OldPassword))
 	if hashErr != nil {
 		panic(util.NewError(http.StatusUnauthorized, "密码错误"))
@@ -102,7 +102,7 @@ func (userService) Add(user dto.UserAddDto) {
 
 	// insert user
 	daoErr := dao.User.Add(user.ToUserModel())
-	panicErrIfNotNil(daoErr, entryErrProducer(1062, userDuplicateErrProducer), entryErr(1452, "角色不存在"))
+	panicErrIfNotNil(daoErr, entryErrProducer(1062, userDuplicateErrProducer), entryErr(1452, "未找到该角色"))
 }
 
 func (userService) Update(user dto.UserUpdateDto) {
@@ -120,7 +120,7 @@ func (userService) Update(user dto.UserUpdateDto) {
 
 	// update user
 	daoErr := dao.User.Update(user.Uid, user)
-	panicErrIfNotNil(daoErr, entryErrProducer(1062, userDuplicateErrProducer), entryErr(1452, "角色不存在"))
+	panicNotFoundErrIfNotNil(daoErr, "未找到该用户", entryErrProducer(1062, userDuplicateErrProducer), entryErr(1452, "未找到该角色"))
 }
 
 func (userService) Delete(id uint64) {

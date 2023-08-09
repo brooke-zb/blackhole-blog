@@ -13,7 +13,7 @@ type roleService struct{}
 
 func (roleService) FindById(id uint64) dto.RoleDto {
 	role, daoErr := dao.Role.FindById(id)
-	panicSelectErrIfNotNil(daoErr, "未找到该角色")
+	panicNotFoundErrIfNotNil(daoErr, "未找到该角色")
 	return dto.ToRoleDto(role)
 }
 
@@ -33,7 +33,7 @@ func (roleService) Update(role dto.RoleUpdateDto) {
 	defer cache.User.Clear()
 
 	daoErr := dao.Role.Update(role)
-	panicErrIfNotNil(daoErr, entryErr(1062, "角色名已存在"))
+	panicNotFoundErrIfNotNil(daoErr, "未找到该角色", entryErr(1062, "角色名已存在"))
 }
 
 func (roleService) Delete(id uint64) {

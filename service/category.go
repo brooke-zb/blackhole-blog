@@ -11,7 +11,7 @@ type categoryService struct{}
 
 func (categoryService) FindById(id uint64) dto.CategoryDto {
 	category, daoErr := dao.Category.FindById(id)
-	panicSelectErrIfNotNil(daoErr, "分类不存在")
+	panicNotFoundErrIfNotNil(daoErr, "未找到该分类")
 	return dto.ToCategoryDto(category)
 }
 
@@ -37,7 +37,7 @@ func (categoryService) Update(category dto.CategoryUpdateDto) {
 	defer cache.Article.Clear()
 
 	daoErr := dao.Category.Update(category)
-	panicErrIfNotNil(daoErr, entryErr(1062, "分类名已存在"))
+	panicNotFoundErrIfNotNil(daoErr, "未找到该分类", entryErr(1062, "分类名已存在"))
 }
 
 func (categoryService) Delete(id uint64) {
