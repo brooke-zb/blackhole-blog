@@ -54,7 +54,7 @@ func panicErrIfNotNil(err error, entries ...errorEntry) {
 }
 
 // panicNotFoundErrIfNotNil panics a util.Error if err is not nil.
-// use to handle gorm.ErrRecordNotFound with custom error message.
+// use to handle gorm.ErrRecordNotFound and other dao err with custom error message.
 func panicNotFoundErrIfNotNil(err error, notFoundMsg string, entries ...errorEntry) {
 	if err == nil {
 		return

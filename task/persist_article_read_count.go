@@ -24,23 +24,25 @@ func persistArticleReadCountTask() {
 	}
 	for _, key := range keys {
 		func() {
+			// get article id
+			aid, err := strconv.ParseUint(key[len(setting.ArticleReadCountPrefix):], 10, 64)
+			var count int64 = 0
 			defer func() {
 				if err := recover(); err != nil {
 					failCount++
 					log.Default.Errorf("PersistArticleReadCountTask: %s", err)
 				} else {
 					successCount++
+					log.Default.Infof("PersistArticleReadCountTask: persist success, article id: %d, readcount increment: %d", aid, count)
 				}
 			}()
 
-			// get article id
-			aid, err := strconv.ParseUint(key[len(setting.ArticleReadCountPrefix):], 10, 64)
 			if err != nil {
 				panic(fmt.Errorf("parse article id fail with reason: %s", err.Error()))
 			}
 
 			// get read count increment
-			count, err := util.Redis.PFCount(key)
+			count, err = util.Redis.PFCount(key)
 			if err != nil {
 				panic(fmt.Errorf("get key %s fail with reason: %s", key, err.Error()))
 			}
