@@ -38,6 +38,13 @@ host = '127.0.0.1'
 port = 6379
 password = ''
 
+[oss]
+endpoint = 'you-endpoint.aliyuncs.com'
+access-key-id = 'KeyID'
+access-key-secret = 'SecretKey'
+bucket-name = 'my-oss-bucket'
+save-folder = '/path/to/save/folder'
+
 [words-filter]
 words-path = '/path/to/words.txt'
 

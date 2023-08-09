@@ -4,6 +4,7 @@ import (
 	"blackhole-blog/middleware/auth"
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
+	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/service"
 	"github.com/gin-gonic/gin"
@@ -38,6 +39,20 @@ func ArticleAdd(c *gin.Context) {
 	// insert article
 	service.Article.Add(article)
 	c.JSON(http.StatusOK, util.RespMsg("添加成功"))
+}
+
+func ArticleUploadAttachment(c *gin.Context) {
+	// bindings
+	attachment, err := c.FormFile("file")
+	if err != nil {
+		log.Err.Error(err.Error())
+		panic(util.NewError(http.StatusBadRequest, "出现未知错误，上传失败"))
+	}
+
+	// upload attachment
+	reader, err := attachment.Open()
+	path := service.Article.UploadAttachment(reader, attachment.Filename)
+	c.JSON(http.StatusOK, util.RespOK(path))
 }
 
 func ArticleUpdate(c *gin.Context) {

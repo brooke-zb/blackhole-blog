@@ -49,6 +49,13 @@ type config struct {
 		Port     int    `mapstructure:"port"`
 		Password string `mapstructure:"password"`
 	} `mapstructure:"redis"`
+	OSS struct {
+		Endpoint        string `mapstructure:"endpoint"`
+		AccessKeyId     string `mapstructure:"access-key-id"`
+		AccessKeySecret string `mapstructure:"access-key-secret"`
+		BucketName      string `mapstructure:"bucket-name"`
+		SaveFolder      string `mapstructure:"save-folder"`
+	} `mapstructure:"oss"`
 	Log struct {
 		Default LogConfig `mapstructure:"default"`
 		Api     LogConfig `mapstructure:"api"`

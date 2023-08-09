@@ -94,11 +94,12 @@ func InitRouter() *gin.Engine {
 
 		article := adminGroup.Group("/article", security.RequirePermission("ARTICLE:FULLACCESS"))
 		{
-			article.GET("/:id", admin.ArticleFindById)  // 获取文章详情
-			article.GET("", admin.ArticleFindList)      // 获取文章列表
-			article.POST("", admin.ArticleAdd)          // 添加文章
-			article.PUT("", admin.ArticleUpdate)        // 修改文章
-			article.DELETE("/:id", admin.ArticleDelete) // 删除文章
+			article.GET("/:id", admin.ArticleFindById)             // 获取文章详情
+			article.GET("", admin.ArticleFindList)                 // 获取文章列表
+			article.POST("", admin.ArticleAdd)                     // 添加文章
+			article.POST("/attach", admin.ArticleUploadAttachment) // 上传附件
+			article.PUT("", admin.ArticleUpdate)                   // 修改文章
+			article.DELETE("/:id", admin.ArticleDelete)            // 删除文章
 		}
 
 		comment := adminGroup.Group("/comment", security.RequirePermission("COMMENT:FULLACCESS"))

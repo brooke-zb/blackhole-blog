@@ -7,7 +7,9 @@ import (
 	"blackhole-blog/pkg/dao"
 	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
+	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -61,6 +63,17 @@ func (articleService) Add(article dto.ArticleAddDto) {
 	a.Aid = util.NextId()
 	err := dao.Article.Add(a)
 	panicErrIfNotNil(err, entryErrProducer(1452, foreignKeyErrProducer))
+}
+
+func (articleService) UploadAttachment(attachment io.Reader, filename string) string {
+	path, err := util.UploadFile(attachment, filename)
+	if err != nil {
+		if errors.Is(err, util.ErrFileAlreadyExist) {
+			panic(util.NewError(http.StatusBadRequest, "文件已存在，请更换文件名"))
+		}
+		panicErrIfNotNil(err)
+	}
+	return path
 }
 
 func (articleService) Update(article dto.ArticleUpdateDto) {

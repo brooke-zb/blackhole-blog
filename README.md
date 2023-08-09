@@ -17,6 +17,7 @@ A simple, security blog system based on [Gin](https://github.com/gin-gonic/gin)
 - [x] sensitive words filter base on [sensitive](https://github.com/importcjj/sensitive)
 - [ ] mail notification base on [go-mail](https://github.com/wneessen/go-mail)
 - [x] cron task base on [gocron](https://github.com/go-co-op/gocron)
+- [x] static file storage base on Aliyun OSS
 
 ## Development Convention
 
