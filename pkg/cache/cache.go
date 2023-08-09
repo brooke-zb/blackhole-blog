@@ -11,9 +11,9 @@ var (
 	Article = ccache.New(ccache.Configure[dto.ArticleDto]())
 )
 
-// DeferredSetWithRevocer is a helper function to set cache after function return.
+// DeferredSetWithRecover is a helper function to set cache after function return.
 // use with panic recover
-func DeferredSetWithRevocer[T any](cache *ccache.Cache[T], key string, item *T) func() {
+func DeferredSetWithRecover[T any](cache *ccache.Cache[T], key string, item *T) func() {
 	return func() {
 		if r := recover(); r != nil {
 			panic(r)

@@ -23,7 +23,7 @@ func (articleService) FindById(id uint64) (res dto.ArticleDto) {
 	if articleCache != nil && !articleCache.Expired() {
 		return articleCache.Value()
 	}
-	defer cache.DeferredSetWithRevocer(cache.Article, cacheKey, &res)()
+	defer cache.DeferredSetWithRecover(cache.Article, cacheKey, &res)()
 
 	article, daoErr := dao.Article.FindById(id)
 	panicNotFoundErrIfNotNil(daoErr, "未找到该文章")

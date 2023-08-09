@@ -28,7 +28,7 @@ func (userService) FindById(id uint64) (res dto.UserDto) {
 	if userCache != nil && !userCache.Expired() {
 		return userCache.Value()
 	}
-	defer cache.DeferredSetWithRevocer(cache.User, cacheKey, &res)()
+	defer cache.DeferredSetWithRecover(cache.User, cacheKey, &res)()
 
 	user, daoErr := dao.User.FindById(id)
 	panicNotFoundErrIfNotNil(daoErr, "未找到该用户")
