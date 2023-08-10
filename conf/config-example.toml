@@ -80,5 +80,5 @@ level = 'info'
 [log.error]
 writer = 'file'
 encoder = 'console'
-file = './logs/api.log'
-level = 'info'
+file = './logs/error.log'
+level = 'error'
