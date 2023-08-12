@@ -17,10 +17,13 @@ type Article struct {
 	CreatedAt   time.Time
 	UpdatedAt   *time.Time `gorm:"autoUpdateTime:false"`
 	// PUBLISHED, DRAFT or HIDDEN
-	Status    string
+	Status    ArticleStatus
 	ReadCount int
 }
 
+type ArticleStatus string
+
+// TODO pin article
 type PinArticle struct {
 	Aid     uint64  `gorm:"primaryKey;autoIncrement:false"`
 	Article Article `gorm:"foreignKey:Aid;references:Aid"`

@@ -2,6 +2,7 @@
 package setting
 
 import (
+	"blackhole-blog/models"
 	"flag"
 	"github.com/spf13/viper"
 	"os"
@@ -96,12 +97,12 @@ const (
 )
 
 var (
-	StatusArticlePublished = "PUBLISHED"
-	StatusArticleDraft     = "DRAFT"
-	StatusArticleHidden    = "HIDDEN"
-	StatusCommentPublished = "PUBLISHED"
-	StatusCommentReview    = "REVIEW"
-	StatusCommentHidden    = "HIDDEN"
+	StatusArticlePublished models.ArticleStatus = "PUBLISHED"
+	StatusArticleDraft     models.ArticleStatus = "DRAFT"
+	StatusArticleHidden    models.ArticleStatus = "HIDDEN"
+	StatusCommentPublished                      = "PUBLISHED"
+	StatusCommentReview                         = "REVIEW"
+	StatusCommentHidden                         = "HIDDEN"
 )
 
 func readConfigPath() (path string) {

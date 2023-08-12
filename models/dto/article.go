@@ -6,28 +6,28 @@ import (
 )
 
 type ArticleDto struct {
-	Aid         uint64             `json:"aid"`
-	Uid         uint64             `json:"uid"`
-	Category    ArticleCategoryDto `json:"category"`
-	Tags        []ArticleTagDto    `json:"tags"`
-	Title       string             `json:"title"`
-	Content     string             `json:"content"`
-	Commentable bool               `json:"commentable"`
-	CreatedAt   time.Time          `json:"createdAt"`
-	UpdatedAt   *time.Time         `json:"UpdatedAt"`
-	Status      string             `json:"status"`
-	ReadCount   int                `json:"readCount"`
+	Aid         uint64               `json:"aid"`
+	Uid         uint64               `json:"uid"`
+	Category    ArticleCategoryDto   `json:"category"`
+	Tags        []ArticleTagDto      `json:"tags"`
+	Title       string               `json:"title"`
+	Content     string               `json:"content"`
+	Commentable bool                 `json:"commentable"`
+	CreatedAt   time.Time            `json:"createdAt"`
+	UpdatedAt   *time.Time           `json:"UpdatedAt"`
+	Status      models.ArticleStatus `json:"status"`
+	ReadCount   int                  `json:"readCount"`
 }
 
 type ArticlePreviewDto struct {
-	Aid       uint64             `json:"aid"`
-	User      ArticleUserDto     `json:"user"`
-	Category  ArticleCategoryDto `json:"category"`
-	Tags      []ArticleTagDto    `json:"tags"`
-	Title     string             `json:"title"`
-	CreatedAt time.Time          `json:"createdAt"`
-	Status    string             `json:"status"`
-	ReadCount int                `json:"readCount"`
+	Aid       uint64               `json:"aid"`
+	User      ArticleUserDto       `json:"user"`
+	Category  ArticleCategoryDto   `json:"category"`
+	Tags      []ArticleTagDto      `json:"tags"`
+	Title     string               `json:"title"`
+	CreatedAt time.Time            `json:"createdAt"`
+	Status    models.ArticleStatus `json:"status"`
+	ReadCount int                  `json:"readCount"`
 }
 
 type ArticleUserDto struct {
@@ -45,13 +45,13 @@ type ArticleTagDto struct {
 }
 
 type ArticleAddDto struct {
-	Uid         uint64          `json:"-"`
-	Cid         uint64          `json:"cid" binding:"required"`
-	Tags        []ArticleTagDto `json:"tags" binding:"required"`
-	Title       string          `json:"title" binding:"required,max=64"`
-	Content     string          `json:"content" binding:"required"`
-	Commentable bool            `json:"commentable" binding:"required"`
-	Status      string          `json:"status" binding:"required,oneof=PUBLISHED DRAFT HIDDEN"`
+	Uid         uint64               `json:"-"`
+	Cid         uint64               `json:"cid" binding:"required"`
+	Tags        []ArticleTagDto      `json:"tags" binding:"required"`
+	Title       string               `json:"title" binding:"required,max=64"`
+	Content     string               `json:"content" binding:"required"`
+	Commentable bool                 `json:"commentable" binding:"required"`
+	Status      models.ArticleStatus `json:"status" binding:"required,oneof=PUBLISHED DRAFT HIDDEN"`
 }
 
 func (a ArticleAddDto) ToArticleModel() models.Article {
@@ -73,15 +73,15 @@ func (a ArticleAddDto) ToArticleModel() models.Article {
 }
 
 type ArticleUpdateDto struct {
-	Aid         uint64          `json:"aid" binding:"required" gorm:"-"`
-	Cid         uint64          `json:"cid" binding:"required"`
-	Tags        []ArticleTagDto `json:"tags" binding:"required" gorm:"-"`
-	Title       string          `json:"title" binding:"required,max=64"`
-	Content     string          `json:"content" binding:"required"`
-	Commentable bool            `json:"commentable" binding:"required"`
-	Status      string          `json:"status" binding:"required,oneof=PUBLISHED DRAFT HIDDEN"`
-	CreatedAt   time.Time       `json:"createdAt" binding:"required"`
-	UpdatedAt   *time.Time      `json:"updatedAt"`
+	Aid         uint64               `json:"aid" binding:"required" gorm:"-"`
+	Cid         uint64               `json:"cid" binding:"required"`
+	Tags        []ArticleTagDto      `json:"tags" binding:"required" gorm:"-"`
+	Title       string               `json:"title" binding:"required,max=64"`
+	Content     string               `json:"content" binding:"required"`
+	Commentable bool                 `json:"commentable" binding:"required"`
+	Status      models.ArticleStatus `json:"status" binding:"required,oneof=PUBLISHED DRAFT HIDDEN"`
+	CreatedAt   time.Time            `json:"createdAt" binding:"required"`
+	UpdatedAt   *time.Time           `json:"updatedAt"`
 }
 
 func (a ArticleUpdateDto) TagsModel() []models.Tag {

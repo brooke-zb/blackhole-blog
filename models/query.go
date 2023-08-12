@@ -2,11 +2,11 @@ package models
 
 type ArticleClause struct {
 	PageParam
-	Category *string `form:"category"`
-	Tag      *string `form:"tag"`
-	Status   *string `form:"status" binding:"omitempty,oneof=PUBLISHED DRAFT HIDDEN"`
-	Username *string `form:"username"`
-	Title    *string `form:"title"`
+	Category *string        `form:"category"`
+	Tag      *string        `form:"tag"`
+	Status   *ArticleStatus `form:"status" binding:"omitempty,oneof=PUBLISHED DRAFT HIDDEN"`
+	Username *string        `form:"username"`
+	Title    *string        `form:"title"`
 	// created_at, read_count
 	SortBy *string `form:"sortBy" binding:"omitempty,oneof=created_at read_count"`
 }
