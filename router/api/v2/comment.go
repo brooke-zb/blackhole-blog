@@ -4,7 +4,6 @@ import (
 	"blackhole-blog/middleware/auth"
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
-	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/service"
 	"github.com/gin-gonic/gin"
@@ -22,7 +21,7 @@ func CommentFindListByArticleId(c *gin.Context) {
 	comments := service.Comment.FindList(models.CommentClause{
 		Aid:                 &param.Id,
 		PageParam:           page,
-		Status:              &setting.StatusCommentPublished,
+		Status:              &models.StatusCommentPublished,
 		OmitSensitiveFields: true,
 		SelectChildren:      true,
 	})

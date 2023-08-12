@@ -4,7 +4,6 @@ import (
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
 	"blackhole-blog/pkg/dao"
-	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
 	"errors"
 	"gorm.io/gorm"
@@ -41,7 +40,7 @@ func (commentService) Insert(commentAddDto dto.CommentAddDto) {
 
 		// 评论不存在 或者 评论非审核通过 或者 文章id不匹配
 		if errors.Is(daoErr, gorm.ErrRecordNotFound) ||
-			reply.Status != setting.StatusCommentPublished ||
+			reply.Status != models.StatusCommentPublished ||
 			reply.Aid != comment.Aid {
 			panic(util.NewError(http.StatusBadRequest, "回复的评论不存在"))
 		}
@@ -58,22 +57,22 @@ func (commentService) Insert(commentAddDto dto.CommentAddDto) {
 	}
 
 	// 检查评论者是否受信任
-	comment.Status = setting.StatusCommentPublished
+	comment.Status = models.StatusCommentPublished
 	if comment.Uid == nil {
 		match, _ := util.WordsFilter.FindIn(comment.Content)
 		if !match {
 			match, _ = util.WordsFilter.FindIn(comment.Nickname)
 		}
 		if match {
-			comment.Status = setting.StatusCommentReview
+			comment.Status = models.StatusCommentReview
 		}
 	}
 
 	// 异步发送通知邮件
 	switch comment.Status {
-	case setting.StatusCommentPublished:
+	case models.StatusCommentPublished:
 		go util.SendReplyMail(comment.Aid, comment.Nickname)
-	case setting.StatusCommentReview:
+	case models.StatusCommentReview:
 		go util.SendReviewMail(comment.Nickname)
 	}
 

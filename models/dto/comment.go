@@ -6,18 +6,19 @@ import (
 )
 
 type CommentDto struct {
-	Coid      uint64       `json:"coid"`
-	Nickname  string       `json:"nickname"`
-	Email     *string      `json:"email,omitempty"`
-	Avatar    *string      `json:"avatar"`
-	Site      *string      `json:"site"`
-	Ip        string       `json:"ip,omitempty"`
-	Content   string       `json:"content"`
-	CreatedAt time.Time    `json:"createdAt"`
-	Children  []CommentDto `json:"children"`
-	ParentId  *uint64      `json:"parentId"`
-	ReplyId   *uint64      `json:"replyId"`
-	ReplyTo   *string      `json:"replyTo"`
+	Coid      uint64               `json:"coid"`
+	Nickname  string               `json:"nickname"`
+	Email     *string              `json:"email,omitempty"`
+	Avatar    *string              `json:"avatar"`
+	Site      *string              `json:"site"`
+	Ip        string               `json:"ip,omitempty"`
+	Content   string               `json:"content"`
+	CreatedAt time.Time            `json:"createdAt"`
+	Children  []CommentDto         `json:"children"`
+	ParentId  *uint64              `json:"parentId"`
+	ReplyId   *uint64              `json:"replyId"`
+	ReplyTo   *string              `json:"replyTo"`
+	Status    models.CommentStatus `json:"status"`
 }
 
 type CommentAddDto struct {
@@ -31,11 +32,11 @@ type CommentAddDto struct {
 }
 
 type CommentUpdateDto struct {
-	Coid     uint64  `json:"coid" binding:"required" gorm:"-"`
-	Nickname string  `json:"nickname" binding:"required,min=2,max=32"`
-	Content  string  `json:"content" binding:"required,max=1024"`
-	Site     *string `json:"site" binding:"omitempty,max=200,startswith=http://|startswith=https://,url"`
-	Status   string  `json:"status" binding:"required,oneof=PUBLISHED REVIEW HIDDEN"`
+	Coid     uint64               `json:"coid" binding:"required" gorm:"-"`
+	Nickname string               `json:"nickname" binding:"required,min=2,max=32"`
+	Content  string               `json:"content" binding:"required,max=1024"`
+	Site     *string              `json:"site" binding:"omitempty,max=200,startswith=http://|startswith=https://,url"`
+	Status   models.CommentStatus `json:"status" binding:"required,oneof=PUBLISHED REVIEW HIDDEN"`
 }
 
 func ToCommentDtoList(comments models.Page[models.Comment]) (res models.Page[CommentDto]) {
@@ -65,6 +66,7 @@ func ToCommentDto(comment models.Comment) CommentDto {
 		ParentId:  comment.ParentId,
 		ReplyId:   comment.ReplyId,
 		ReplyTo:   comment.ReplyTo,
+		Status:    comment.Status,
 	}
 	for i, child := range comment.Children {
 		commentDto.Children[i] = ToCommentDto(child)

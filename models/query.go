@@ -20,12 +20,12 @@ func (c ArticleClause) Order() string {
 
 type CommentClause struct {
 	PageParam
-	Aid                 *uint64 `form:"aid"`
-	IP                  *string `form:"ip" binding:"omitempty,ip"`
-	Nickname            *string `form:"nickname"`
-	Status              *string `form:"status" binding:"omitempty,oneof=PUBLISHED REVIEW HIDDEN"`
-	OmitSensitiveFields bool    `form:"-" binding:"-"`
-	SelectChildren      bool    `form:"-" binding:"-"`
+	Aid                 *uint64        `form:"aid"`
+	IP                  *string        `form:"ip" binding:"omitempty,ip"`
+	Nickname            *string        `form:"nickname"`
+	Status              *CommentStatus `form:"status" binding:"omitempty,oneof=PUBLISHED REVIEW HIDDEN"`
+	OmitSensitiveFields bool           `form:"-" binding:"-"`
+	SelectChildren      bool           `form:"-" binding:"-"`
 }
 
 type UserClause struct {

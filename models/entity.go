@@ -23,6 +23,12 @@ type Article struct {
 
 type ArticleStatus string
 
+var (
+	StatusArticlePublished ArticleStatus = "PUBLISHED"
+	StatusArticleDraft     ArticleStatus = "DRAFT"
+	StatusArticleHidden    ArticleStatus = "HIDDEN"
+)
+
 // TODO pin article
 type PinArticle struct {
 	Aid     uint64  `gorm:"primaryKey;autoIncrement:false"`
@@ -64,12 +70,20 @@ type Comment struct {
 	Content   string
 	CreatedAt time.Time
 	// PUBLISHED, REVIEW or HIDDEN
-	Status   string
+	Status   CommentStatus
 	Children []Comment `gorm:"foreignkey:ParentId"`
 	ParentId *uint64
 	ReplyId  *uint64
 	ReplyTo  *string
 }
+
+type CommentStatus string
+
+var (
+	StatusCommentPublished CommentStatus = "PUBLISHED"
+	StatusCommentReview    CommentStatus = "REVIEW"
+	StatusCommentHidden    CommentStatus = "HIDDEN"
+)
 
 type Role struct {
 	Rid         uint64 `gorm:"primaryKey"`

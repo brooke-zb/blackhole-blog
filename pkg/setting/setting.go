@@ -2,7 +2,6 @@
 package setting
 
 import (
-	"blackhole-blog/models"
 	"flag"
 	"github.com/spf13/viper"
 	"os"
@@ -94,15 +93,6 @@ const (
 	RecoveryAbortKey       = "bhs.recovery.abort"
 	UnauthorizedMessage    = "请登录后再进行操作"
 	InternalErrorMessage   = "内部错误，请联系管理员"
-)
-
-var (
-	StatusArticlePublished models.ArticleStatus = "PUBLISHED"
-	StatusArticleDraft     models.ArticleStatus = "DRAFT"
-	StatusArticleHidden    models.ArticleStatus = "HIDDEN"
-	StatusCommentPublished                      = "PUBLISHED"
-	StatusCommentReview                         = "REVIEW"
-	StatusCommentHidden                         = "HIDDEN"
 )
 
 func readConfigPath() (path string) {

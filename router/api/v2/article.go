@@ -2,7 +2,6 @@ package v2
 
 import (
 	"blackhole-blog/models"
-	"blackhole-blog/pkg/setting"
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/service"
 	"github.com/gin-gonic/gin"
@@ -15,7 +14,7 @@ func ArticleFindById(c *gin.Context) {
 	util.BindUri(c, &param)
 
 	article := service.Article.FindById(param.Id)
-	if article.Status != setting.StatusArticlePublished {
+	if article.Status != models.StatusArticlePublished {
 		panic(util.NewError(http.StatusNotFound, "未找到该文章"))
 	}
 	increment := service.Article.IncrAndGetReadCount(param.Id, c.ClientIP())
@@ -31,7 +30,7 @@ func ArticleFindList(c *gin.Context) {
 	// query
 	articles := service.Article.FindList(models.ArticleClause{
 		PageParam: page,
-		Status:    &setting.StatusArticlePublished,
+		Status:    &models.StatusArticlePublished,
 	})
 	c.JSON(http.StatusOK, util.RespOK(articles))
 }
@@ -47,7 +46,7 @@ func ArticleFindListByCategory(c *gin.Context) {
 	articles := service.Article.FindList(models.ArticleClause{
 		Category:  &category.Name,
 		PageParam: page,
-		Status:    &setting.StatusArticlePublished,
+		Status:    &models.StatusArticlePublished,
 	})
 	c.JSON(http.StatusOK, util.RespOK(articles))
 }
@@ -63,7 +62,7 @@ func ArticleFindListByTag(c *gin.Context) {
 	articles := service.Article.FindList(models.ArticleClause{
 		Tag:       &tag.Name,
 		PageParam: page,
-		Status:    &setting.StatusArticlePublished,
+		Status:    &models.StatusArticlePublished,
 	})
 	c.JSON(http.StatusOK, util.RespOK(articles))
 }
