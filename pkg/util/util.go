@@ -6,5 +6,4 @@ func Setup() {
 	initTrans("zh")
 	initWordFilter()
 	initIdGenerator()
-	initOSS()
 }

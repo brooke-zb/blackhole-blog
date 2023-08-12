@@ -4,6 +4,7 @@ import (
 	"blackhole-blog/pkg/dao"
 	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/setting"
+	"blackhole-blog/pkg/upload"
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/router"
 	"blackhole-blog/task"
@@ -16,6 +17,7 @@ func init() {
 	util.Setup()
 	dao.Setup()
 	task.Setup()
+	upload.Setup()
 }
 
 func main() {
