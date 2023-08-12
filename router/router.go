@@ -7,6 +7,8 @@ import (
 	"blackhole-blog/middleware/no_route"
 	"blackhole-blog/middleware/recovery"
 	"blackhole-blog/middleware/security"
+	"blackhole-blog/pkg/log"
+	"blackhole-blog/pkg/setting"
 	"blackhole-blog/router/api/v2"
 	"blackhole-blog/router/api/v2/admin"
 	"github.com/gin-gonic/gin"
@@ -15,12 +17,21 @@ import (
 func InitRouter() *gin.Engine {
 	r := gin.New()
 
+	// proxy settings
+	err := r.SetTrustedProxies(setting.Config.Server.Proxies)
+	if err != nil {
+		log.Default.Errorf("set trusted proxies fail with reason: %s", err.Error())
+	}
+	r.RemoteIPHeaders = setting.Config.Server.ProxyHeaders
+
+	// set global middlewares
 	r.NoRoute(no_route.NoRoute())
 	r.Use(logger.RouterLog())
 	r.Use(recovery.Recovery())
 	r.Use(csrf.Filter())
 	r.Use(auth.Authorization())
 
+	// routes
 	account := r.Group("/accounts")
 	{
 		account.POST("/tokens", v2.AccountLogin)             // 登录

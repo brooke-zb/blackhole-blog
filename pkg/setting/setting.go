@@ -19,7 +19,7 @@ type config struct {
 	Server struct {
 		Host         string   `mapstructure:"host"`
 		Port         int      `mapstructure:"port"`
-		Proxy        []string `mapstructure:"proxy"`
+		Proxies      []string `mapstructure:"proxies"`
 		ProxyHeaders []string `mapstructure:"proxy-headers"`
 		Jwt          struct {
 			Secret           string        `mapstructure:"secret"`
