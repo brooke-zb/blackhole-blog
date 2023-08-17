@@ -67,7 +67,7 @@ func InitRouter() *gin.Engine {
 
 	adminGroup := r.Group("/admin")
 	{
-		user := adminGroup.Group("/users", security.RequirePermission("USER:FULLACCESS"))
+		user := adminGroup.Group("/users", security.RequirePerm("USER:FULLACCESS"))
 		{
 			user.GET("/:id", admin.UserFindById)  // 获取用户详情
 			user.GET("", admin.UserFindList)      // 获取用户列表
@@ -76,7 +76,7 @@ func InitRouter() *gin.Engine {
 			user.DELETE("/:id", admin.UserDelete) // 删除用户
 		}
 
-		role := adminGroup.Group("/roles", security.RequirePermission("ROLE:FULLACCESS"))
+		role := adminGroup.Group("/roles", security.RequirePerm("ROLE:FULLACCESS"))
 		{
 			role.GET("/:id", admin.RoleFindById)  // 获取角色详情
 			role.GET("", admin.RoleFindList)      // 获取角色列表
@@ -85,7 +85,7 @@ func InitRouter() *gin.Engine {
 			role.DELETE("/:id", admin.RoleDelete) // 删除角色
 		}
 
-		category := adminGroup.Group("/categories", security.RequirePermission("CATEGORY:FULLACCESS"))
+		category := adminGroup.Group("/categories", security.RequirePerm("CATEGORY:FULLACCESS"))
 		{
 			category.GET("/:id", admin.CategoryFindById)  // 获取分类详情
 			category.GET("", admin.CategoryFindList)      // 获取分类列表
@@ -94,7 +94,7 @@ func InitRouter() *gin.Engine {
 			category.DELETE("/:id", admin.CategoryDelete) // 删除分类
 		}
 
-		tag := adminGroup.Group("/tags", security.RequirePermission("TAG:FULLACCESS"))
+		tag := adminGroup.Group("/tags", security.RequirePerm("TAG:FULLACCESS"))
 		{
 			tag.GET("/:id", admin.TagFindById)        // 获取标签详情
 			tag.GET("", admin.TagFindList)            // 获取标签列表
@@ -103,7 +103,7 @@ func InitRouter() *gin.Engine {
 			tag.DELETE("/*ids", admin.TagDeleteBatch) // 批量删除标签
 		}
 
-		article := adminGroup.Group("/articles", security.RequirePermission("ARTICLE:FULLACCESS"))
+		article := adminGroup.Group("/articles", security.RequirePerm("ARTICLE:FULLACCESS"))
 		{
 			article.GET("/:id", admin.ArticleFindById)                  // 获取文章详情
 			article.GET("", admin.ArticleFindList)                      // 获取文章列表
@@ -113,7 +113,7 @@ func InitRouter() *gin.Engine {
 			article.DELETE("/:id", admin.ArticleDelete)                 // 删除文章
 		}
 
-		comment := adminGroup.Group("/comments", security.RequirePermission("COMMENT:FULLACCESS"))
+		comment := adminGroup.Group("/comments", security.RequirePerm("COMMENT:FULLACCESS"))
 		{
 			comment.GET("/:id", admin.CommentFindById)        // 获取评论详情
 			comment.GET("", admin.CommentFindList)            // 获取评论列表
