@@ -16,7 +16,8 @@ func (articleDao) VerifyExist(aid uint64) (exist bool, err error) {
 }
 
 func (articleDao) FindById(aid uint64) (article models.Article, err error) {
-	err = db.Model(&models.Article{}).Preload("Tags").Preload("Category").
+	err = db.Model(&models.Article{}).
+		Preload("Tags").Preload("Category").Preload("User").
 		Take(&article, aid).Error
 	return
 }
@@ -24,7 +25,8 @@ func (articleDao) FindById(aid uint64) (article models.Article, err error) {
 func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.Page[models.Article], err error) {
 	articles.Page = clause.Page()
 	articles.Size = clause.Size()
-	tx := db.Model(&models.Article{}).Preload("User").Preload("Tags").Preload("Category").
+	tx := db.Model(&models.Article{}).
+		Preload("User").Preload("Tags").Preload("Category").
 		Omit("Content", "UpdatedAt")
 
 	// 根据分类名查询

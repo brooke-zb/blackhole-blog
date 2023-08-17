@@ -7,7 +7,7 @@ import (
 
 type ArticleDto struct {
 	Aid         uint64               `json:"aid"`
-	Uid         uint64               `json:"uid"`
+	User        ArticleUserDto       `json:"user"`
 	Category    ArticleCategoryDto   `json:"category"`
 	Tags        []ArticleTagDto      `json:"tags"`
 	Title       string               `json:"title"`
@@ -96,13 +96,10 @@ func (a ArticleUpdateDto) TagsModel() []models.Tag {
 
 func ToArticleDto(article models.Article) ArticleDto {
 	articleDto := ArticleDto{
-		Aid: article.Aid,
-		Uid: article.Uid,
-		Category: ArticleCategoryDto{
-			Cid:  article.Category.Cid,
-			Name: article.Category.Name,
-		},
-		Tags:        make([]ArticleTagDto, len(article.Tags)),
+		Aid:         article.Aid,
+		User:        toArticleUserDto(article.User),
+		Category:    toArticleCategoryDto(article.Category),
+		Tags:        toArticleTagDtoList(article.Tags),
 		Title:       article.Title,
 		Content:     article.Content,
 		Commentable: article.Commentable,
@@ -110,11 +107,6 @@ func ToArticleDto(article models.Article) ArticleDto {
 		UpdatedAt:   article.UpdatedAt,
 		Status:      article.Status,
 		ReadCount:   article.ReadCount,
-	}
-	for i, tag := range article.Tags {
-		articleDto.Tags[i] = ArticleTagDto{
-			Name: tag.Name,
-		}
 	}
 	return articleDto
 }
@@ -127,27 +119,45 @@ func ToArticlePreviewDtoList(articles models.Page[models.Article]) models.Page[A
 		Data:  make([]ArticlePreviewDto, len(articles.Data)),
 	}
 	for i, article := range articles.Data {
-		articleListDto.Data[i] = ArticlePreviewDto{
-			Aid: article.Aid,
-			User: ArticleUserDto{
-				Uid:  article.User.Uid,
-				Name: article.User.Name,
-			},
-			Category: ArticleCategoryDto{
-				Cid:  article.Category.Cid,
-				Name: article.Category.Name,
-			},
-			Tags:      make([]ArticleTagDto, len(article.Tags)),
-			Title:     article.Title,
-			CreatedAt: article.CreatedAt,
-			Status:    article.Status,
-			ReadCount: article.ReadCount,
-		}
-		for j, tag := range article.Tags {
-			articleListDto.Data[i].Tags[j] = ArticleTagDto{
-				Name: tag.Name,
-			}
-		}
+		articleListDto.Data[i] = ToArticlePreviewDto(article)
 	}
 	return articleListDto
+}
+
+func ToArticlePreviewDto(article models.Article) ArticlePreviewDto {
+	articleDto := ArticlePreviewDto{
+		Aid:       article.Aid,
+		User:      toArticleUserDto(article.User),
+		Category:  toArticleCategoryDto(article.Category),
+		Tags:      toArticleTagDtoList(article.Tags),
+		Title:     article.Title,
+		CreatedAt: article.CreatedAt,
+		Status:    article.Status,
+		ReadCount: article.ReadCount,
+	}
+	return articleDto
+}
+
+func toArticleUserDto(user models.User) ArticleUserDto {
+	return ArticleUserDto{
+		Uid:  user.Uid,
+		Name: user.Name,
+	}
+}
+
+func toArticleCategoryDto(category models.Category) ArticleCategoryDto {
+	return ArticleCategoryDto{
+		Cid:  category.Cid,
+		Name: category.Name,
+	}
+}
+
+func toArticleTagDtoList(tags []models.Tag) []ArticleTagDto {
+	tagsDto := make([]ArticleTagDto, len(tags))
+	for i, tag := range tags {
+		tagsDto[i] = ArticleTagDto{
+			Name: tag.Name,
+		}
+	}
+	return tagsDto
 }
