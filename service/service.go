@@ -17,6 +17,7 @@ var (
 	Category = categoryService{}
 	Tag      = tagService{}
 	Role     = roleService{}
+	Friend   = friendService{}
 )
 
 type errorEntry struct {

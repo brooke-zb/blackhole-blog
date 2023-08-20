@@ -18,6 +18,7 @@ var (
 	Category = categoryDao{}
 	Tag      = tagDao{}
 	Role     = roleDao{}
+	Friend   = friendDao{}
 )
 
 func Setup() {

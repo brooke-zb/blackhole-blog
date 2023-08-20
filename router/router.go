@@ -65,6 +65,11 @@ func InitRouter() *gin.Engine {
 		tag.GET("", v2.TagFindList)                         // 获取标签列表
 	}
 
+	friend := r.Group("/friends")
+	{
+		friend.GET("", v2.FriendFindList) // 获取友链列表
+	}
+
 	adminGroup := r.Group("/admin")
 	{
 		user := adminGroup.Group("/users", security.RequirePerm("USER:FULLACCESS"))
@@ -119,6 +124,15 @@ func InitRouter() *gin.Engine {
 			comment.GET("", admin.CommentFindList)            // 获取评论列表
 			comment.PUT("", admin.CommentUpdate)              // 修改评论
 			comment.DELETE("/*ids", admin.CommentDeleteBatch) // 删除评论
+		}
+
+		friend := adminGroup.Group("/friends", security.RequirePerm("FRIEND:FULLACCESS"))
+		{
+			friend.GET("/:id", admin.FriendFindById)  // 获取友链详情
+			friend.GET("", admin.FriendFindList)      // 获取友链列表
+			friend.POST("", admin.FriendAdd)          // 添加友链
+			friend.PUT("", admin.FriendUpdate)        // 修改友链
+			friend.DELETE("/:id", admin.FriendDelete) // 删除友链
 		}
 	}
 

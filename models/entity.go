@@ -109,7 +109,7 @@ type User struct {
 	Articles []Article `gorm:"foreignKey:Uid;references:Uid"`
 }
 
-type FriendlyLink struct {
+type Friend struct {
 	Fid         uint64 `gorm:"primaryKey"`
 	Name        string
 	Link        string
