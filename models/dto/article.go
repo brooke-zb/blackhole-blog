@@ -14,7 +14,7 @@ type ArticleDto struct {
 	Content     string               `json:"content"`
 	Commentable bool                 `json:"commentable"`
 	CreatedAt   time.Time            `json:"createdAt"`
-	UpdatedAt   *time.Time           `json:"UpdatedAt"`
+	UpdatedAt   *time.Time           `json:"updatedAt"`
 	Status      models.ArticleStatus `json:"status"`
 	ReadCount   int                  `json:"readCount"`
 }
