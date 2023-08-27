@@ -8,6 +8,7 @@ import (
 type CommentDto struct {
 	Coid      uint64               `json:"coid"`
 	Nickname  string               `json:"nickname"`
+	Uid       *uint64              `json:"uid"`
 	Email     *string              `json:"email,omitempty"`
 	Avatar    *string              `json:"avatar"`
 	Site      *string              `json:"site"`
@@ -27,6 +28,7 @@ type CommentAddDto struct {
 	Content  string  `json:"content" binding:"required,max=1024"`
 	ReplyId  *uint64 `json:"replyId"`
 	Uid      *uint64 `json:"-"`
+	Email    *string `json:"email" binding:"omitempty,email"`
 	Site     *string `json:"site" binding:"omitempty,max=200,url"`
 	Ip       string  `json:"-"`
 }
@@ -56,6 +58,7 @@ func ToCommentDto(comment models.Comment) CommentDto {
 	commentDto := CommentDto{
 		Coid:      comment.Coid,
 		Nickname:  comment.Nickname,
+		Uid:       comment.Uid,
 		Email:     comment.Email,
 		Avatar:    comment.Avatar,
 		Site:      comment.Site,
@@ -80,6 +83,7 @@ func (c CommentAddDto) ToCommentModel() models.Comment {
 		Nickname: c.Nickname,
 		Content:  c.Content,
 		Site:     c.Site,
+		Email:    c.Email,
 		ReplyId:  c.ReplyId,
 		Uid:      c.Uid,
 		Ip:       c.Ip,
