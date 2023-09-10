@@ -24,7 +24,7 @@ func (commentService) FindList(clause models.CommentClause) (res models.Page[dto
 	return dto.ToCommentDtoList(comments)
 }
 
-func (commentService) Insert(commentAddDto dto.CommentAddDto) {
+func (commentService) Insert(commentAddDto dto.CommentAddDto) models.CommentStatus {
 	comment := commentAddDto.ToCommentModel()
 
 	// 查询文章是否存在
@@ -81,6 +81,7 @@ func (commentService) Insert(commentAddDto dto.CommentAddDto) {
 
 	err := dao.Comment.Insert(comment)
 	panicErrIfNotNil(err)
+	return comment.Status
 }
 
 func (commentService) Update(comment dto.CommentUpdateDto) {

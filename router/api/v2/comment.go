@@ -39,6 +39,10 @@ func CommentAdd(c *gin.Context) {
 	}
 
 	// insert
-	service.Comment.Insert(comment)
+	status := service.Comment.Insert(comment)
+	if status == models.StatusCommentReview {
+		c.JSON(http.StatusOK, util.RespMsg("评论成功，等待博主审核"))
+		return
+	}
 	c.JSON(http.StatusOK, util.RespMsg("评论成功"))
 }
