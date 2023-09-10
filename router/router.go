@@ -15,6 +15,11 @@ import (
 )
 
 func InitRouter() *gin.Engine {
+	// set production mode
+	if setting.Config.Production {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	r := gin.New()
 
 	// proxy settings

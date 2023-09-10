@@ -16,7 +16,8 @@ type LogConfig struct {
 }
 
 type config struct {
-	Server struct {
+	Production bool `mapstructure:"production"`
+	Server     struct {
 		Host         string   `mapstructure:"host"`
 		Port         int      `mapstructure:"port"`
 		Proxies      []string `mapstructure:"proxies"`
