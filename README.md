@@ -2,8 +2,6 @@
 
 A simple, security blog system based on [Gin](https://github.com/gin-gonic/gin)
 
-⚠ Still under development ⚠
-
 ## Features
 
 - [x] custom setting with config file based on [viper](https://github.com/spf13/viper)
