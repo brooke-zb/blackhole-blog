@@ -78,6 +78,10 @@ func (articleService) UploadAttachment(attachment io.Reader, filename string) st
 }
 
 func (articleService) Update(article dto.ArticleUpdateDto) {
+	// cache
+	cacheKey := fmt.Sprintf("article:%d", article.Aid)
+	defer cache.Article.Delete(cacheKey)
+
 	err := dao.Article.Update(article)
 	panicNotFoundErrIfNotNil(err, "未找到该文章", entryErrProducer(1452, foreignKeyErrProducer))
 }
@@ -96,6 +100,10 @@ func foreignKeyErrProducer(msg string) string {
 }
 
 func (articleService) Delete(id uint64) {
+	// cache
+	cacheKey := fmt.Sprintf("article:%d", id)
+	defer cache.Article.Delete(cacheKey)
+
 	affects, err := dao.Article.Delete(id)
 	panicErrIfNotNil(err)
 	if affects == 0 {
