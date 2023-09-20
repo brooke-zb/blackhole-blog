@@ -49,6 +49,11 @@ func Authorization() gin.HandlerFunc {
 		// get user by uid
 		user := service.User.FindById(claims.Uid)
 
+		// check user enabled
+		if !user.Enabled {
+			panic(util.NewError(http.StatusForbidden, "您的账号已被禁用"))
+		}
+
 		// set user to context
 		c.Set(UserKey, user)
 
