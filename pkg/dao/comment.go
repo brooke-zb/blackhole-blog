@@ -74,7 +74,7 @@ func (commentDao) Update(comment dto.CommentUpdateDto) error {
 	if count == 0 {
 		return gorm.ErrRecordNotFound
 	}
-	return db.Model(&models.Comment{}).Where("coid = ?", comment.Coid).
+	return db.Model(&models.Comment{}).Where("coid = ?", comment.Coid).Select("*").
 		Updates(comment).Error
 }
 
