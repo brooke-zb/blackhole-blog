@@ -82,7 +82,7 @@ func InitRouter() *gin.Engine {
 			user.GET("/:id", admin.UserFindById)  // 获取用户详情
 			user.GET("", admin.UserFindList)      // 获取用户列表
 			user.POST("", admin.UserAdd)          // 添加用户
-			user.PUT("/:id", admin.UserUpdate)    // 修改用户
+			user.PUT("", admin.UserUpdate)        // 修改用户
 			user.DELETE("/:id", admin.UserDelete) // 删除用户
 		}
 
