@@ -41,7 +41,7 @@ func (roleService) Delete(id uint64) {
 	defer cache.User.Clear()
 
 	affects, daoErr := dao.Role.Delete(id)
-	panicErrIfNotNil(daoErr)
+	panicErrIfNotNil(daoErr, entryErr(1451, "该角色下存在用户，禁止删除"))
 	if affects == 0 {
 		panic(util.NewError(http.StatusBadRequest, "未找到该角色"))
 	}
