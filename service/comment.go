@@ -68,6 +68,12 @@ func (commentService) Insert(commentAddDto dto.CommentAddDto) models.CommentStat
 		}
 	}
 
+	// 生成评论id
+	comment.Coid = util.NextId()
+
+	err := dao.Comment.Insert(comment)
+	panicErrIfNotNil(err)
+
 	// 异步发送通知邮件
 	switch comment.Status {
 	case models.StatusCommentPublished:
@@ -76,11 +82,6 @@ func (commentService) Insert(commentAddDto dto.CommentAddDto) models.CommentStat
 		go util.SendReviewMail(comment.Nickname)
 	}
 
-	// 生成评论id
-	comment.Coid = util.NextId()
-
-	err := dao.Comment.Insert(comment)
-	panicErrIfNotNil(err)
 	return comment.Status
 }
 
