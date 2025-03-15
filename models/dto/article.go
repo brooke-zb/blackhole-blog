@@ -81,7 +81,7 @@ type ArticleUpdateDto struct {
 	Commentable bool                 `json:"commentable" binding:"required"`
 	Status      models.ArticleStatus `json:"status" binding:"required,oneof=PUBLISHED DRAFT HIDDEN"`
 	CreatedAt   time.Time            `json:"createdAt" binding:"required"`
-	UpdatedAt   *time.Time           `json:"updatedAt"`
+	UpdatedAt   *time.Time           `json:"updatedAt" gorm:"autoUpdateTime:false"`
 }
 
 func (a ArticleUpdateDto) TagsModel() []models.Tag {
