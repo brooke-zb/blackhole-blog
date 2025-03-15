@@ -3,6 +3,7 @@ package dao
 import (
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
+
 	"gorm.io/gorm"
 )
 
@@ -25,6 +26,7 @@ func (tagDao) FindList(page, size int) (tags models.Page[models.Tag], err error)
 
 func (tagDao) FindListWithHeat() (tags []models.Tag, err error) {
 	err = db.Model(&models.Tag{}).Joins("inner join bh_tag_relation on bh_tag.tid = bh_tag_relation.tid").
+		Joins("inner join bh_article on bh_article.aid = bh_tag_relation.aid and bh_article.status = ?", models.StatusArticlePublished).
 		Select("bh_tag.tid, bh_tag.name, COUNT(*) as ArticleCount").
 		Group("tid").Find(&tags).Error
 	return
