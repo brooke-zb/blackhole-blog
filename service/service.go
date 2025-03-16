@@ -5,9 +5,10 @@ package service
 import (
 	"blackhole-blog/pkg/util"
 	"errors"
+	"net/http"
+
 	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 var (
@@ -18,6 +19,7 @@ var (
 	Tag      = tagService{}
 	Role     = roleService{}
 	Friend   = friendService{}
+	AiChat   = aiChatService{}
 )
 
 type errorEntry struct {

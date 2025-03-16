@@ -7,9 +7,10 @@ import (
 	"blackhole-blog/pkg/util"
 	"blackhole-blog/service"
 	"errors"
-	"github.com/gin-gonic/gin"
 	"mime/multipart"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func ArticleFindById(c *gin.Context) {
@@ -76,4 +77,26 @@ func ArticleDelete(c *gin.Context) {
 	// delete article
 	service.Article.Delete(param.Id)
 	c.JSON(http.StatusOK, util.RespMsg("删除成功"))
+}
+
+func ArticleGenerateAbstract(c *gin.Context) {
+	w := c.Writer
+
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+
+	flusher, _ := w.(http.Flusher)
+
+	// bindings
+	param := models.BigStringBody{}
+	util.BindJSON(c, &param)
+
+	// generate abstract
+	abstractCh := service.Article.GenerateAbstract(param.Content)
+
+	for abstract := range abstractCh {
+		w.Write([]byte(abstract))
+		flusher.Flush()
+	}
 }

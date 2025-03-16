@@ -3,9 +3,10 @@ package setting
 
 import (
 	"flag"
-	"github.com/spf13/viper"
 	"os"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 type LogConfig struct {
@@ -85,6 +86,11 @@ type config struct {
 	WordsFilter struct {
 		WordsPath *string `mapstructure:"words-path"`
 	} `mapstructure:"words-filter"`
+	Ai struct {
+		DeepSeek struct {
+			ApiKey *string `mapstructure:"api-key"`
+		} `mapstructure:"deepseek"`
+	} `mapstructure:"ai"`
 }
 
 var Config = config{}

@@ -9,8 +9,9 @@ import (
 	"blackhole-blog/middleware/security"
 	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/setting"
-	"blackhole-blog/router/api/v2"
+	v2 "blackhole-blog/router/api/v2"
 	"blackhole-blog/router/api/v2/admin"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -121,6 +122,7 @@ func InitRouter() *gin.Engine {
 			article.POST("/attachments", admin.ArticleUploadAttachment) // 上传附件
 			article.PUT("", admin.ArticleUpdate)                        // 修改文章
 			article.DELETE("/:id", admin.ArticleDelete)                 // 删除文章
+			article.POST("/abstract", admin.ArticleGenerateAbstract)    // 生成AI摘要
 		}
 
 		comment := adminGroup.Group("/comments", security.RequirePerm("COMMENT:FULLACCESS"))

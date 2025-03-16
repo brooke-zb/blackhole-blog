@@ -10,6 +10,10 @@ type StringParam struct {
 	Name string `uri:"name" binding:"required"`
 }
 
+type BigStringBody struct {
+	Content string `json:"content" binding:"required"`
+}
+
 // PageParam is a struct for binding page and size from query.
 // should be used with Page and Size.
 type PageParam struct {

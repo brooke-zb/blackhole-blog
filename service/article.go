@@ -110,3 +110,9 @@ func (articleService) Delete(id uint64) {
 		panic(util.NewError(http.StatusBadRequest, "未找到该文章"))
 	}
 }
+
+const abstractQuestion = "你是一个文章总结助手，需要对以下markdown编写的文章进行摘要，以方便放在首页可以让读者快速了解文章内容，尽量控制在150字以内，回答时直接给出结果（即文章摘要），不要有多余的回复：\n"
+
+func (articleService) GenerateAbstract(content string) chan string {
+	return AiChat.StreamingChat(abstractQuestion + content)
+}
