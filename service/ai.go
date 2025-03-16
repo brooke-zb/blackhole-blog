@@ -18,7 +18,7 @@ type aiChatService struct {
 	onceInit sync.Once
 }
 
-func (s *aiChatService) StreamingChat(question string) (ch chan string) {
+func (s *aiChatService) StreamingChat(question string, closeNotify <-chan bool) <-chan string {
 	// 懒加载初始化
 	s.onceInit.Do(func() {
 		if setting.Config.Ai.DeepSeek.ApiKey == nil {
@@ -48,10 +48,19 @@ func (s *aiChatService) StreamingChat(question string) (ch chan string) {
 		panic(util.NewError(http.StatusInternalServerError, "创建AI Chat流失败，请联系管理员"))
 	}
 
-	ch = make(chan string)
+	ch := make(chan string)
 	go func() {
 		defer stream.Close()
 		for {
+			// check closeNotify
+			select {
+			case <-closeNotify:
+				log.Err.Info("AI Chat流被客户端关闭")
+				close(ch)
+				return
+			default:
+			}
+
 			response, err := stream.Recv()
 			if errors.Is(err, io.EOF) {
 				close(ch)
@@ -59,7 +68,7 @@ func (s *aiChatService) StreamingChat(question string) (ch chan string) {
 			}
 			if err != nil {
 				log.Err.Errorf("AI Chat流错误: %v", err)
-				ch <- "发生了未知错误"
+				ch <- "(发生了错误，输出中断)"
 				close(ch)
 				break
 			}
@@ -68,5 +77,5 @@ func (s *aiChatService) StreamingChat(question string) (ch chan string) {
 			}
 		}
 	}()
-	return
+	return ch
 }

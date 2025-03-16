@@ -87,13 +87,14 @@ func ArticleGenerateAbstract(c *gin.Context) {
 	w.Header().Set("Connection", "keep-alive")
 
 	flusher, _ := w.(http.Flusher)
+	closeNotify := w.CloseNotify()
 
 	// bindings
 	param := models.BigStringBody{}
 	util.BindJSON(c, &param)
 
 	// generate abstract
-	abstractCh := service.Article.GenerateAbstract(param.Content)
+	abstractCh := service.Article.GenerateAbstract(param.Content, closeNotify)
 
 	for abstract := range abstractCh {
 		w.Write([]byte(abstract))
