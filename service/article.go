@@ -111,7 +111,7 @@ func (articleService) Delete(id uint64) {
 	}
 }
 
-const abstractPrompt = "你是一个文章总结专家，擅长对文章尤其是技术类的文章提取摘要，你拥有强大的内容分析能力，能准确提取关键信息和核心要点。具备将用户输入的markdown文章提炼成整洁语句的能力，以便让读者快速了解文章内容，你的回答应直接给出结果（即文章摘要），不需要多余的回复，并尽量控制在100字以内。"
+const abstractPrompt = "你是一个文章总结专家，擅长对文章尤其是技术类的文章提取摘要，你拥有强大的内容分析能力，能准确提取关键信息和核心要点。具备将用户输入的markdown文章提炼成整洁语句的能力，以便让读者快速了解文章内容，你的回答应直接给出结果（即文章摘要纯文本），不需要多余的回复，并尽量控制在100字以内。"
 
 func (articleService) GenerateAbstract(content string, closeNotify <-chan bool) <-chan string {
 	return AiChat.StreamingChat(abstractPrompt, content, closeNotify)
