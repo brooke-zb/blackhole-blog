@@ -18,7 +18,7 @@ type aiChatService struct {
 	onceInit sync.Once
 }
 
-func (s *aiChatService) StreamingChat(question string, closeNotify <-chan bool) <-chan string {
+func (s *aiChatService) StreamingChat(prompt string, question string, closeNotify <-chan bool) <-chan string {
 	// 懒加载初始化
 	s.onceInit.Do(func() {
 		if setting.Config.Ai.DeepSeek.ApiKey == nil {
@@ -39,6 +39,7 @@ func (s *aiChatService) StreamingChat(question string, closeNotify <-chan bool) 
 	stream, err := s.client.CreateChatCompletionStream(ctx, &deepseek.StreamChatCompletionRequest{
 		Model: deepseek.DeepSeekChat,
 		Messages: []deepseek.ChatCompletionMessage{
+			{Role: deepseek.ChatMessageRoleSystem, Content: prompt},
 			{Role: deepseek.ChatMessageRoleUser, Content: question},
 		},
 		Stream: true,

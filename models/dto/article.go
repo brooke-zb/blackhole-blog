@@ -11,6 +11,7 @@ type ArticleDto struct {
 	Category    ArticleCategoryDto   `json:"category"`
 	Tags        []ArticleTagDto      `json:"tags"`
 	Title       string               `json:"title"`
+	Abstract    *string              `json:"abstract"`
 	Content     string               `json:"content"`
 	Commentable bool                 `json:"commentable"`
 	CreatedAt   time.Time            `json:"createdAt"`
@@ -25,6 +26,7 @@ type ArticlePreviewDto struct {
 	Category  ArticleCategoryDto   `json:"category"`
 	Tags      []ArticleTagDto      `json:"tags"`
 	Title     string               `json:"title"`
+	Abstract  *string              `json:"abstract"`
 	CreatedAt time.Time            `json:"createdAt"`
 	Status    models.ArticleStatus `json:"status"`
 	ReadCount int                  `json:"readCount"`
@@ -49,6 +51,7 @@ type ArticleAddDto struct {
 	Cid         uint64               `json:"cid" binding:"required"`
 	Tags        []ArticleTagDto      `json:"tags" binding:"required"`
 	Title       string               `json:"title" binding:"required,max=64"`
+	Abstract    *string              `json:"abstract" binding:"omitempty,max=255"`
 	Content     string               `json:"content" binding:"required"`
 	Commentable bool                 `json:"commentable" binding:"required"`
 	Status      models.ArticleStatus `json:"status" binding:"required,oneof=PUBLISHED DRAFT HIDDEN"`
@@ -59,6 +62,7 @@ func (a ArticleAddDto) ToArticleModel() models.Article {
 		Uid:         a.Uid,
 		Cid:         a.Cid,
 		Title:       a.Title,
+		Abstract:    a.Abstract,
 		Tags:        make([]models.Tag, len(a.Tags)),
 		Content:     a.Content,
 		Commentable: a.Commentable,
@@ -77,6 +81,7 @@ type ArticleUpdateDto struct {
 	Cid         uint64               `json:"cid" binding:"required"`
 	Tags        []ArticleTagDto      `json:"tags" binding:"required" gorm:"-"`
 	Title       string               `json:"title" binding:"required,max=64"`
+	Abstract    *string              `json:"abstract" binding:"omitempty,max=255"`
 	Content     string               `json:"content" binding:"required"`
 	Commentable bool                 `json:"commentable" binding:"required"`
 	Status      models.ArticleStatus `json:"status" binding:"required,oneof=PUBLISHED DRAFT HIDDEN"`
@@ -101,6 +106,7 @@ func ToArticleDto(article models.Article) ArticleDto {
 		Category:    toArticleCategoryDto(article.Category),
 		Tags:        toArticleTagDtoList(article.Tags),
 		Title:       article.Title,
+		Abstract:    article.Abstract,
 		Content:     article.Content,
 		Commentable: article.Commentable,
 		CreatedAt:   article.CreatedAt,
@@ -131,6 +137,7 @@ func ToArticlePreviewDto(article models.Article) ArticlePreviewDto {
 		Category:  toArticleCategoryDto(article.Category),
 		Tags:      toArticleTagDtoList(article.Tags),
 		Title:     article.Title,
+		Abstract:  article.Abstract,
 		CreatedAt: article.CreatedAt,
 		Status:    article.Status,
 		ReadCount: article.ReadCount,

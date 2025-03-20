@@ -11,6 +11,7 @@ type Article struct {
 	Tags        []Tag       `gorm:"many2many:tagRelation;joinForeignKey:Aid;joinReferences:Tid"`
 	TagRelation TagRelation `gorm:"foreignKey:Aid;references:Aid"`
 	Title       string
+	Abstract    *string
 	Content     string
 	Commentable bool
 	Comments    []Comment `gorm:"foreignKey:Aid;references:Aid"`
