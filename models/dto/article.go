@@ -26,7 +26,6 @@ type ArticlePreviewDto struct {
 	Category  ArticleCategoryDto   `json:"category"`
 	Tags      []ArticleTagDto      `json:"tags"`
 	Title     string               `json:"title"`
-	Abstract  *string              `json:"abstract"`
 	CreatedAt time.Time            `json:"createdAt"`
 	Status    models.ArticleStatus `json:"status"`
 	ReadCount int                  `json:"readCount"`
@@ -137,7 +136,6 @@ func ToArticlePreviewDto(article models.Article) ArticlePreviewDto {
 		Category:  toArticleCategoryDto(article.Category),
 		Tags:      toArticleTagDtoList(article.Tags),
 		Title:     article.Title,
-		Abstract:  article.Abstract,
 		CreatedAt: article.CreatedAt,
 		Status:    article.Status,
 		ReadCount: article.ReadCount,

@@ -28,7 +28,7 @@ func (articleDao) FindPreviewList(clause models.ArticleClause) (articles models.
 	articles.Size = clause.Size()
 	tx := db.Model(&models.Article{}).
 		Preload("User").Preload("Tags").Preload("Category").
-		Omit("Content", "UpdatedAt")
+		Omit("Content", "Abstract", "UpdatedAt")
 
 	// 根据分类名查询
 	if clause.Category != nil {
