@@ -1,0 +1,41 @@
+# Git 相关
+.git
+.gitignore
+.gitattributes
+
+# IDE 相关
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# 日志文件
+logs/
+*.log
+
+# 临时文件
+tmp/
+temp/
+
+# 测试文件
+*_test.go
+test/
+tests/
+
+# 文档
+*.md
+LICENSE
+
+# Docker 相关
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# 构建产物
+bin/
+dist/
+build/
+
+# 依赖（会在构建时重新下载）
+vendor/
