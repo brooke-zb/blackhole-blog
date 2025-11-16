@@ -1,9 +1,10 @@
-package router
+package v2
 
 import (
 	"blackhole-blog/pkg/util"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Health(c *gin.Context) {
