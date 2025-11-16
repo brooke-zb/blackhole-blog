@@ -17,7 +17,7 @@ RUN go mod download
 COPY . .
 
 # 构建应用程序
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o blackhole-blog .
+RUN go build -o blackhole-blog
 
 # 运行阶段
 FROM alpine:latest
