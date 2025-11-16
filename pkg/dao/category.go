@@ -3,6 +3,7 @@ package dao
 import (
 	"blackhole-blog/models"
 	"blackhole-blog/models/dto"
+
 	"gorm.io/gorm"
 )
 
@@ -27,6 +28,7 @@ func (categoryDao) FindListWithArticleCount() (categories []models.Category, err
 	// gorm丑陋的写法之一
 	err = db.Joins("LEFT JOIN bh_article ON bh_category.cid = bh_article.cid").
 		Select("bh_category.cid, bh_category.name, COUNT(*) AS ArticleCount").
+		Where("bh_article.status = ?", models.StatusArticlePublished).
 		Group("cid").Find(&categories).Error
 	return
 }
