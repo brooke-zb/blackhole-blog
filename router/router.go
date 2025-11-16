@@ -38,6 +38,8 @@ func InitRouter() *gin.Engine {
 	r.Use(auth.Authorization())
 
 	// routes
+	r.GET("/health", v2.Health)
+
 	account := r.Group("/accounts")
 	{
 		account.POST("/tokens", v2.AccountLogin)             // 登录
