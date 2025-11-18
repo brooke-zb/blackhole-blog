@@ -3,6 +3,7 @@ package util
 import (
 	"blackhole-blog/pkg/log"
 	"fmt"
+
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
@@ -45,6 +46,6 @@ func initTrans(locale string) {
 		}
 	}
 	if err != nil {
-		log.Default.Error(err.Error())
+		log.Default.Error("validator translate init fail: " + err.Error())
 	}
 }

@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"blackhole-blog/pkg/log"
 	"blackhole-blog/pkg/setting"
 	"fmt"
 
@@ -39,6 +40,7 @@ func Setup() {
 		},
 	})
 	if err != nil {
+		log.Default.Error("database connect fail: " + err.Error())
 		panic(err)
 	}
 }
