@@ -16,8 +16,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: write   # <-- 新增：允许工作流从 GitHub OIDC 提供商获取令牌以进行签名
-      attestations: write
 
     steps:
       - name: Checkout repository
@@ -30,7 +28,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Extract metadata for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -53,4 +51,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
-          provenance: true
+          provenance: false

@@ -7,9 +7,6 @@ WORKDIR /build
 # 安装必要的构建工具
 RUN apk add --no-cache git
 
-# 复制 go.mod 和 go.sum 文件
-#COPY go.mod go.sum ./
-
 # 复制源代码
 COPY . .
 
@@ -34,8 +31,8 @@ COPY --from=builder /build/blackhole-blog .
 # 创建必要的目录
 RUN mkdir -p /data/logs
 
-# 暴露端口（默认 80，可通过配置文件修改）
-EXPOSE 80
+# 暴露端口
+EXPOSE ${APP_PORT}
 
 # 启动应用
 CMD ["./blackhole-blog"]
