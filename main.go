@@ -25,7 +25,5 @@ func main() {
 	err := r.Run(fmt.Sprintf("%s:%d", setting.Config.Server.Host, setting.Config.Server.Port))
 	if err != nil {
 		log.Default.Errorf("server run fail with reason: %s", err.Error())
-	} else {
-		log.Default.Info("=== server run success ===")
 	}
 }
