@@ -2,34 +2,30 @@ version: '3.8'
 
 services:
   blackhole-blog:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: blackhole-blog
+    image: ghcr.io/brooke-zb/blackhole-blog:latest
+    container_name: backend
     restart: unless-stopped
 
-    # 端口映射 - 将容器的 80 端口映射到宿主机的 8190 端口
-    # 可根据需要修改宿主机端口
+    # 端口映射
     ports:
-      - "8190:80"
+      - "${HOST_IP}:${HOST_PORT}:${APP_PORT}"
 
-    # 挂载配置文件目录
-    # 将宿主机的 ./conf 目录挂载到容器的 /data 目录
-    # 这样可以使用外部配置文件，无需重新构建镜像
+    # 挂载宿主机目录，可以将配置文件和日志目录挂载到容器中
     volumes:
-      - ${APP_PATH}:/data
+      - ${DATA_PATH}:/data
 
     # 环境变量 - 指定配置文件路径
     environment:
-      - BH_BLOG_CONFIG_PATH=/data/conf/config.toml
+      - BH_BLOG_CONFIG_PATH=${BH_BLOG_CONFIG_PATH}
+      - GIN_MODE=${GIN_MODE}
 
-    # 使用 bridge 网络模式访问宿主机服务
-    networks:
-      - blog_net
+    # 访问宿主机服务
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
     # 健康检查
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health || exit 1"]
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:${APP_PORT}/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3

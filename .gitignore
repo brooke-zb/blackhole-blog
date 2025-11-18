@@ -21,3 +21,5 @@ pnpm-lock.yaml
 ### Project Configuration ###
 config-*.toml
 !config-example.toml
+
+.env
