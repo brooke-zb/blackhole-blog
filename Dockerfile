@@ -19,12 +19,8 @@ RUN go build -o blackhole-blog
 # =========运行阶段=========
 FROM alpine:latest
 
-# 设置时区
-RUN apk --update add tzdata && \
-    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    echo "${TZ}" > /etc/timezone && \
-    apk del tzdata && \
-    rm -rf /var/cache/apk/*
+# 添加时区支持
+RUN apk --no-cache add tzdata
 
 # 设置工作目录
 WORKDIR /app
