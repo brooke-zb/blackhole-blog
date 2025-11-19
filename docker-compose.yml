@@ -18,6 +18,7 @@ services:
     environment:
       - BH_BLOG_CONFIG_PATH=${BH_BLOG_CONFIG_PATH}
       - GIN_MODE=${GIN_MODE}
+      - TZ=${TZ}
 
     # 访问宿主机服务
     extra_hosts:

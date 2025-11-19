@@ -19,8 +19,12 @@ RUN go build -o blackhole-blog
 # =========运行阶段=========
 FROM alpine:latest
 
-# 设置时区为上海
-ENV TZ=Asia/Shanghai
+# 设置时区
+RUN apk --update add tzdata && \
+    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    echo "${TZ}" > /etc/timezone && \
+    apk del tzdata && \
+    rm -rf /var/cache/apk/*
 
 # 设置工作目录
 WORKDIR /app
