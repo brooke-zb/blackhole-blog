@@ -7,11 +7,14 @@ WORKDIR /build
 # 安装必要的构建工具
 RUN apk add --no-cache git
 
+# 复制 go.mod 和 go.sum 文件
+COPY go.mod go.sum ./
+
+# 下载依赖（先不复制源代码，以利用build cache）
+RUN go mod download
+
 # 复制源代码
 COPY . .
-
-# 下载依赖
-RUN go mod download
 
 # 构建应用程序
 RUN go build -o blackhole-blog
