@@ -28,9 +28,6 @@ WORKDIR /app
 # 从构建阶段复制二进制文件
 COPY --from=builder /build/blackhole-blog .
 
-# 创建必要的目录
-RUN mkdir -p /data/logs
-
 # 暴露端口
 EXPOSE ${APP_PORT}
 
